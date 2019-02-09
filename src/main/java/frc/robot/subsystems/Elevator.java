@@ -29,7 +29,7 @@ public class Elevator extends Subsystem {
 {
     mElevatorBottomProxHardware = new DigitalInput(Setup.kElevatorBottomProx);
 	mElevatorTopProxHardware = new DigitalInput(Setup.kElevatorTopProx);
-	mElevatorLaser = new AnalogInput(Setup.kElevatorLaserId)
+	mElevatorLaser = new AnalogInput(Setup.kElevatorLaserId);
 
 }
 
@@ -47,10 +47,10 @@ public class Elevator extends Subsystem {
 
     public void setElevatorPosition(String position)
 	{
-		double volts = mElevatorLaser.getVoltage()
-		double raw = ElevatorLaser.getValue();
-		double averageRaw = ElevatorLaser.getAverageValue();
-		double averageVolts = ElevatorLaser.getAverageVoltage();
+		double volts = mElevatorLaser.getVoltage();
+		double raw = mElevatorLaser.getValue();
+		double averageRaw = mElevatorLaser.getAverageValue();
+		double averageVolts = mElevatorLaser.getAverageVoltage();
 		
 		
 		if (position == "HIGH")
@@ -94,9 +94,13 @@ public class Elevator extends Subsystem {
 	@Override
 	public void updateSubsystem(){
 
+		double raw = mElevatorLaser.getValue();
+		double volts = mElevatorLaser.getVoltage();
+		double averageRaw = mElevatorLaser.getAverageValue();
+        double averageVolts = mElevatorLaser.getAverageVoltage();
         //Limits
 
-        if (elevatorBottomProx = 1 && elevatorTopProx = 1)
+        if ((elevatorBottomProx = true) && (elevatorTopProx = true))
         {
             setElevatorSpeed(0);
             mSpool.set(ControlMode.PercentOutput,0);
@@ -105,10 +109,7 @@ public class Elevator extends Subsystem {
 		System.out.println("Elevator Laser Raw" + raw);
 		System.out.println("Elevator Laser Volts" + volts);
 		//Update Laser
-		double raw = ElevatorLaser.getValue();
-		double volts = ElevatorLaser.getVoltage();
-		double averageRaw = ElevatorLaser.getAverageValue();
-        double averageVolts = ElevatorLaser.getAverageVoltage();
+		
     
 		outputToSmartDashboard();
 	}
