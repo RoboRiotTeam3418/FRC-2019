@@ -1,11 +1,9 @@
 package frc.robot.subsystems;
 import frc.robot.Setup;
 import frc.robot.subsystems.*;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
-
-
 import edu.wpi.first.wpilibj.DigitalInput;
 
 
@@ -13,7 +11,8 @@ public class Elevator extends Subsystem {
 
 	static Elevator mInstance;
 	DigitalInput mElevatorTopProxHardware;
-    DigitalInput mElevatorBottomProxHardware;
+	DigitalInput mElevatorBottomProxHardware;
+	
     //Elevator Positions
     double elevatorHighPosition = 0;
 	double elevatorMiddlePosition = 0;
@@ -31,26 +30,17 @@ public class Elevator extends Subsystem {
 
 }
 
-//    mElevatorBottonProxHardware = new DigitalInput(Setup.kElevatorBottomProx);
-//    mElevatorTopProxHardware = new DigitalInput(Setup.kElevatorTopProx);
-
-
     public static Elevator getInstance() {
         return mInstance;
     }
 
+    public void setElevatorSpeed(double speed)
 
+	 {
+     	System.out.println("Elevator Speed" + speed);
+     	mSpool.set(ControlMode.PercentOutput,speed);
 
-
-    // public void setElevatorSpeed(double speed)
-
-	// {
-    // 	System.out.println("Elevator Speed" + this.speed);
-    // 	mElevatorSpeed = this.speed;
-    // 	mSpool.set(ControlMode.PercentOutput,this.speed);
-
-    // }
-
+     }
 
     public void setElevatorPosition(String position)
 	{
@@ -79,17 +69,15 @@ public class Elevator extends Subsystem {
 		{
 			while (volts > elevatorLowPosition)
 			{
-				//setElevatorSpeed(-.25, -.25);
+				setElevatorSpeed(-.25, -.25);
 			}
 		} 
 
 
-        @Override
+    @Override
 	public void stop()
 	{
-    	mLeftElevator.set(ControlMode.PercentOutput,0);
-		mRightElevator.set(ControlMode.PercentOutput,0);
-		
+    	mSpool.set(ControlMode.PercentOutput,0);
     }
     
 
@@ -98,7 +86,7 @@ public class Elevator extends Subsystem {
 
         //Limits
 
-        if (elevatorBottomProx = elevatorTopProx)
+        if (elevatorBottomProx = 1 && elevatorTopProx = 1)
         {
             setElevatorSpeed(0);
             mSpool.set(ControlMode.PercentOutput,0);

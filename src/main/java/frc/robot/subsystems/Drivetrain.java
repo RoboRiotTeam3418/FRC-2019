@@ -1,29 +1,13 @@
 package frc.robot.subsystems;
-
-//Not sure if this is right??
-import robot.Setup;
-// 
-
-
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
-import java.util.Scanner;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import java.lang.Math;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Spark;
+import frc.robot.Setup;
 
 
 public class Drivetrain extends Subsystem {
@@ -56,7 +40,6 @@ public class Drivetrain extends Subsystem {
     	
         mRightFrontDrive = new CANSparkMax(Setup.kRightFrontMotorId, MotorType.kBrushless);
     	mRightFrontDrive.set(0);
-    	mRightFrontDrive.setSensorPhase(false);
     	mRightFrontDrive.setInverted(true);
     	
     	mLeftRearDrive = new CANSparkMax(Setup.kLeftRearMotorId, MotorType.kBrushless);
@@ -82,12 +65,6 @@ public class Drivetrain extends Subsystem {
     public DriveGear getDriveGear(){
     	return mDriveGear;
     }
-    
-    public void resetEncoders(){
-    	mLeftEncoder.reset();
-    	mRightEncoder.reset();
-    }
-    
     
     public void setTankDriveSpeed(double left, double right){
     	//System.out.println("Left speed = " + left + " right speed = " + right);
@@ -158,7 +135,6 @@ public class Drivetrain extends Subsystem {
 		SmartDashboard.putNumber("DriveTrain_RightMotorSpeeds", mRightSpeed);
 		SmartDashboard.putNumber("DriveTrain_MoveValue", mMoveSpeed);
 		SmartDashboard.putNumber("DriveTrain_RotateValue", mRotateSpeed);
-		SmartDashboard.putNumber("Right_Drivetrain_Encoder_Distance", mRightEncoder.getDistance());
 		SmartDashboard.putString("Drive_Gear", mDriveGear.toString());
 	}
 

@@ -24,11 +24,9 @@ public class Intake extends Subsystem
 public Intake() {
 			
 		mIntake= new VictorSPX(Setup.kIntakeId);
-
 		mIntake.setInverted(false);
-		
 		System.out.println("Intake Done Initializing.");
-		mIntake.set(0);
+		mIntake.set(ControlMode.PercentOutput, 0);
 		
     }
     

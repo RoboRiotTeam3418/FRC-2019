@@ -139,8 +139,7 @@ void HardwareMap() {
         mIntakeRotaryHardware = new TalonSRX(Setup.kIntakeRotaryId);
 
         //Pneumatics
-        mLeftShifterHardware = new Solenoid(Setup.kLeftShifterSolenoidId);
-        mRightShifterHardware = new Solenoid(Setup.kRightShifterSolenoidId);
+        mLeftShifterHardware = new Solenoid(Setup.kShifterSolenoidId);
         mCompressorHardware = new Compressor(0);
 
         //Sensors
