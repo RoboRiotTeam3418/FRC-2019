@@ -4,6 +4,7 @@ import frc.robot.subsystems.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 
@@ -12,7 +13,8 @@ public class Elevator extends Subsystem {
 	static Elevator mInstance;
 	DigitalInput mElevatorTopProxHardware;
 	DigitalInput mElevatorBottomProxHardware;
-	
+	AnalogInput mElevatorLaser;
+
     //Elevator Positions
     double elevatorHighPosition = 0;
 	double elevatorMiddlePosition = 0;
@@ -27,6 +29,7 @@ public class Elevator extends Subsystem {
 {
     mElevatorBottomProxHardware = new DigitalInput(Setup.kElevatorBottomProx);
 	mElevatorTopProxHardware = new DigitalInput(Setup.kElevatorTopProx);
+	mElevatorLaser = new AnalogInput(Setup.kElevatorLaserId)
 
 }
 
@@ -44,11 +47,17 @@ public class Elevator extends Subsystem {
 
     public void setElevatorPosition(String position)
 	{
+		double volts = mElevatorLaser.getVoltage()
+		double raw = ElevatorLaser.getValue();
+		double averageRaw = ElevatorLaser.getAverageValue();
+		double averageVolts = ElevatorLaser.getAverageVoltage();
+		
+		
 		if (position == "HIGH")
 		{
 			while (volts < elevatorHighPosition)
 			{
-				setElevatorSpeed(.25, .25);
+				setElevatorSpeed(.25);
 			}
 		} 
 
@@ -56,12 +65,12 @@ public class Elevator extends Subsystem {
 		{
 			while (volts < elevatorMiddlePosition)
 			{
-				setElevatorSpeed(.25, .25);
+				setElevatorSpeed(.25);
 			}
 
 			while (volts > elevatorMiddlePosition)
 			{
-				setElevatorSpeed(-.25, -.25);
+				setElevatorSpeed(-.25);
 			}
 		} 
 
@@ -69,8 +78,9 @@ public class Elevator extends Subsystem {
 		{
 			while (volts > elevatorLowPosition)
 			{
-				setElevatorSpeed(-.25, -.25);
+				setElevatorSpeed(-.25);
 			}
+		}
 		} 
 
 
@@ -92,11 +102,13 @@ public class Elevator extends Subsystem {
             mSpool.set(ControlMode.PercentOutput,0);
         } 
 
+		System.out.println("Elevator Laser Raw" + raw);
+		System.out.println("Elevator Laser Volts" + volts);
 		//Update Laser
-		raw = ElevatorLaser.getValue();
-		volts = ElevatorLaser.getVoltage();
-		averageRaw = ElevatorLaser.getAverageValue();
-        averageVolts = ElevatorLaser.getAverageVoltage();
+		double raw = ElevatorLaser.getValue();
+		double volts = ElevatorLaser.getVoltage();
+		double averageRaw = ElevatorLaser.getAverageValue();
+        double averageVolts = ElevatorLaser.getAverageVoltage();
     
 		outputToSmartDashboard();
 	}
