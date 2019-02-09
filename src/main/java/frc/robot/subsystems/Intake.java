@@ -24,7 +24,7 @@ public class Intake extends Subsystem
 
 	/* Nonzero to block the config until success, zero to skip checking */
     final int kTimeoutMs = 30;
-	
+
     /**
 	 * If the measured travel has a discontinuity, Note the extremities or
 	 * "book ends" of the travel.
@@ -33,17 +33,16 @@ public class Intake extends Subsystem
 	final int kBookEnd_0 = 910;		/* 80 deg */
 	final int kBookEnd_1 = 1137;	/* 100 deg */
 
-	
 
-	
+
+
 
 public Intake() {
-			
+
 		mIntake= new VictorSPX(Setup.kIntakeId);
 		mIntake.setInverted(false);
 		System.out.println("Intake Done Initializing.");
 		mIntake.set(ControlMode.PercentOutput, 0);
-
 		mIntakeRotary = new TalonSRX(Setup.kIntakeRotaryId);
 
 		/* Factory Default Hardware to prevent unexpected behaviour */
@@ -51,15 +50,15 @@ public Intake() {
 
 		/* Seed quadrature to be absolute and continuous */
 		initQuadrature();
-		
+
 		/* Configure Selected Sensor for Talon */
 		mIntakeRotary.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,	// Feedback
 										0, 											// PID ID
 										kTimeoutMs);								// Timeout
 
-		
+
     }
-    
+
     public enum IntakeRollerState {
     	INTAKE,
     	REVERSE,
@@ -86,37 +85,37 @@ public Intake() {
 			mIntakeRollerState = IntakeRollerState.STOP;
 			break;
 		}
-		
-		
+
+
 		outputToSmartDashboard();
-	}	
-	
-	
+	}
+
+
 	public void intake(){
 		mIntakeRollerState = IntakeRollerState.INTAKE;
 	}
-	
+
 	public void reverse(){
 		mIntakeRollerState = IntakeRollerState.REVERSE;
 	}
-	
+
 	public void intakePosition(String position)
 	{
-	
+
 		if (position == "HATCH")
 		{
-			
-		} 
+
+		}
 
 		if (position == "CARGO")
 		{
-			
+
 		}
 
 
-		} 
-	}
+		}
 	
+
 	@Override
 	public void stop(){
 		mIntakeRollerState = IntakeRollerState.STOP;
@@ -130,13 +129,13 @@ public Intake() {
 	public void setRollerSpeed(double speed) {
 
 		mIntake.set(ControlMode.PercentOutput, speed);
-		
+
 	}
-	
+
 	@Override
 	public void outputToSmartDashboard() {
 		SmartDashboard.putString("Intake_Roller_State", mIntakeRollerState.toString());
-		
+
 	}
 
 	public void initQuadrature() {
@@ -163,7 +162,7 @@ public Intake() {
 
 		/**
 		 * Mask out the bottom 12 bits to normalize to [0,4095],
-		 * or in other words, to stay within [0,360) degrees 
+		 * or in other words, to stay within [0,360) degrees
 		 */
 		pulseWidth = pulseWidth & 0xFFF;
 
@@ -184,34 +183,34 @@ public Intake() {
 	}
 
 	public void disabledPeriodic() {
-		/**
-		 * When button is pressed, seed the quadrature register. You can do this
-		 * once on boot or during teleop/auton init. If you power cycle the 
-		 * Talon, press the button to confirm it's position is restored.
-		 */
-		if (_joy.getRawButton(1)) {
-			initQuadrature();
-		}
+		// /**
+		//  * When button is pressed, seed the quadrature register. You can do this
+		//  * once on boot or during teleop/auton init. If you power cycle the
+		//  * Talon, press the button to confirm it's position is restored.
+		//  */
+		// if (_joy.getRawButton(1)) {
+		// 	initQuadrature();
+		// }
 
-		/**
-		 * Quadrature is selected for soft-lim/closed-loop/etc. initQuadrature()
-		 * will initialize quad to become absolute by using PWD
-		 */
-		int selSenPos = _talon.getSelectedSensorPosition(0);
-		int pulseWidthWithoutOverflows = 
-				_talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+		// /**
+		//  * Quadrature is selected for soft-lim/closed-loop/etc. initQuadrature()
+		//  * will initialize quad to become absolute by using PWD
+		//  */
+		// int selSenPos = _talon.getSelectedSensorPosition(0);
+		// int pulseWidthWithoutOverflows =
+		// 		_talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 
-		/**
-		 * Display how we've adjusted PWM to produce a QUAD signal that is
-		 * absolute and continuous. Show in sensor units and in rotation
-		 * degrees.
-		 */
-		System.out.print("pulseWidPos:" + pulseWidthWithoutOverflows +
-						 "   =>    " + "selSenPos:" + selSenPos);
-		System.out.print("      ");
-		System.out.print("pulseWidDeg:" + ToDeg(pulseWidthWithoutOverflows) +
-						 "   =>    " + "selSenDeg:" + ToDeg(selSenPos));
-		System.out.println();
+		// /**
+		//  * Display how we've adjusted PWM to produce a QUAD signal that is
+		//  * absolute and continuous. Show in sensor units and in rotation
+		//  * degrees.
+		//  */
+		// System.out.print("pulseWidPos:" + pulseWidthWithoutOverflows +
+		// 				 "   =>    " + "selSenPos:" + selSenPos);
+		// System.out.print("      ");
+		// System.out.print("pulseWidDeg:" + ToDeg(pulseWidthWithoutOverflows) +
+		// 				 "   =>    " + "selSenDeg:" + ToDeg(selSenPos));
+		// System.out.println();
 	}
 
 

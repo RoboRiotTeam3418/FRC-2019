@@ -169,10 +169,10 @@ public static double kSpoolSpeed = .25;
 //CAN
 
 //Drive Train
-public static int kLeftFrontMotorId = 1;
-public static int kLeftRearMotorId = 2;
-public static int kRightFrontMotorId = 3;
-public static int kRightRearMotorId = 4;
+public static int kLeftFrontMotorId = 0;
+public static int kLeftRearMotorId = 1;
+public static int kRightFrontMotorId = 2;
+public static int kRightRearMotorId = 3;
 
 //Intake
 public static int kIntakeId = 5;
