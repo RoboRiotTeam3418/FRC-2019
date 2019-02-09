@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 import frc.robot.Setup;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
@@ -14,12 +15,12 @@ public class Intake extends Subsystem
     static Intake mInstance = new Intake();
 
     public static Intake getInstance() {
-    	System.out.println("Before MINStance");
     	return mInstance;
-    	
     }
 
-    private VictorSPX mIntake;
+	private VictorSPX mIntake;
+	private TalonSRX mIntakeRotary;
+	
 
 public Intake() {
 			
@@ -27,6 +28,9 @@ public Intake() {
 		mIntake.setInverted(false);
 		System.out.println("Intake Done Initializing.");
 		mIntake.set(ControlMode.PercentOutput, 0);
+
+		mIntakeRotary = new TalonSRX(Setup.kIntakeRotaryId);
+
 		
     }
     

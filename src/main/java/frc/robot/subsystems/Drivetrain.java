@@ -16,9 +16,9 @@ public class Drivetrain extends Subsystem {
 
     public static Drivetrain getInstance() {
         return mInstance;
-    }
-
-
+	}
+	
+	
     //Shifters
     Solenoid mLeftSolenoid;
     Solenoid mRightSolenoid;

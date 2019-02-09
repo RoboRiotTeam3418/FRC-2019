@@ -57,22 +57,20 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Robot extends IterativeRobot  {
 
   //Initialize main parts of the robot
-
   Setup mSetup;
   Drivetrain mDrivetrain;
   Elevator mElevator;
   Intake mIntake;
   
+
   public void updateAllSubsystems(){
 		
 		mDrivetrain.updateSubsystem();
 	  mIntake.updateSubsystem();
 	  mElevator.updateSubsystem();
-
   }
   
   public void stopAllSubsystems(){
-		
 		mDrivetrain.stop();
 		mDrivetrain.lowGear();
 		mIntake.stop();
@@ -82,7 +80,6 @@ public class Robot extends IterativeRobot  {
 
   @Override
   public void robotInit() {
-
 
     mSetup = Setup.getInstance();
     mDrivetrain = Drivetrain.getInstance();
