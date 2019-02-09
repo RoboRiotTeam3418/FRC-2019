@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 public class Intake extends Subsystem
 {
@@ -20,6 +21,20 @@ public class Intake extends Subsystem
 
 	private VictorSPX mIntake;
 	private TalonSRX mIntakeRotary;
+
+	/* Nonzero to block the config until success, zero to skip checking */
+    final int kTimeoutMs = 30;
+	
+    /**
+	 * If the measured travel has a discontinuity, Note the extremities or
+	 * "book ends" of the travel.
+	 */
+	final boolean kDiscontinuityPresent = true;
+	final int kBookEnd_0 = 910;		/* 80 deg */
+	final int kBookEnd_1 = 1137;	/* 100 deg */
+
+	
+
 	
 
 public Intake() {
@@ -30,6 +45,17 @@ public Intake() {
 		mIntake.set(ControlMode.PercentOutput, 0);
 
 		mIntakeRotary = new TalonSRX(Setup.kIntakeRotaryId);
+
+		/* Factory Default Hardware to prevent unexpected behaviour */
+		mIntakeRotary.configFactoryDefault();
+
+		/* Seed quadrature to be absolute and continuous */
+		initQuadrature();
+		
+		/* Configure Selected Sensor for Talon */
+		mIntakeRotary.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,	// Feedback
+										0, 											// PID ID
+										kTimeoutMs);								// Timeout
 
 		
     }
@@ -66,7 +92,6 @@ public Intake() {
 	}	
 	
 	
-	
 	public void intake(){
 		mIntakeRollerState = IntakeRollerState.INTAKE;
 	}
@@ -75,7 +100,22 @@ public Intake() {
 		mIntakeRollerState = IntakeRollerState.REVERSE;
 	}
 	
+	public void intakePosition(String position)
+	{
 	
+		if (position == "HATCH")
+		{
+			
+		} 
+
+		if (position == "CARGO")
+		{
+			
+		}
+
+
+		} 
+	}
 	
 	@Override
 	public void stop(){
@@ -99,7 +139,80 @@ public Intake() {
 		
 	}
 
+	public void initQuadrature() {
+		/* get the absolute pulse width position */
+		int pulseWidth = mIntakeRotary.getSensorCollection().getPulseWidthPosition();
 
+		/**
+		 * If there is a discontinuity in our measured range, subtract one half
+		 * rotation to remove it
+		 */
+		if (kDiscontinuityPresent) {
+
+			/* Calculate the center */
+			int newCenter;
+			newCenter = (kBookEnd_0 + kBookEnd_1) / 2;
+			newCenter &= 0xFFF;
+
+			/**
+			 * Apply the offset so the discontinuity is in the unused portion of
+			 * the sensor
+			 */
+			pulseWidth -= newCenter;
+		}
+
+		/**
+		 * Mask out the bottom 12 bits to normalize to [0,4095],
+		 * or in other words, to stay within [0,360) degrees 
+		 */
+		pulseWidth = pulseWidth & 0xFFF;
+
+		/* Update Quadrature position */
+		mIntakeRotary.getSensorCollection().setQuadraturePosition(pulseWidth, kTimeoutMs);
+	}
+
+
+	String ToDeg(int units) {
+		double deg = units * 360.0 / 4096.0;
+
+		/* truncate to 0.1 res */
+		deg *= 10;
+		deg = (int) deg;
+		deg /= 10;
+
+		return "" + deg;
+	}
+
+	public void disabledPeriodic() {
+		/**
+		 * When button is pressed, seed the quadrature register. You can do this
+		 * once on boot or during teleop/auton init. If you power cycle the 
+		 * Talon, press the button to confirm it's position is restored.
+		 */
+		if (_joy.getRawButton(1)) {
+			initQuadrature();
+		}
+
+		/**
+		 * Quadrature is selected for soft-lim/closed-loop/etc. initQuadrature()
+		 * will initialize quad to become absolute by using PWD
+		 */
+		int selSenPos = _talon.getSelectedSensorPosition(0);
+		int pulseWidthWithoutOverflows = 
+				_talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+
+		/**
+		 * Display how we've adjusted PWM to produce a QUAD signal that is
+		 * absolute and continuous. Show in sensor units and in rotation
+		 * degrees.
+		 */
+		System.out.print("pulseWidPos:" + pulseWidthWithoutOverflows +
+						 "   =>    " + "selSenPos:" + selSenPos);
+		System.out.print("      ");
+		System.out.print("pulseWidDeg:" + ToDeg(pulseWidthWithoutOverflows) +
+						 "   =>    " + "selSenDeg:" + ToDeg(selSenPos));
+		System.out.println();
+	}
 
 
 
