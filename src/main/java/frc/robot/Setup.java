@@ -27,11 +27,13 @@ public class Setup
     //Creates Joystick Object
     Joystick mDriverStick;
     Joystick mSecondaryDriverStick;
+    Joystick mSwitchboard;
 
     //Initialize Joystick Object
     void ControlBoard() {
     	mDriverStick = new Joystick(0);
-    	mSecondaryDriverStick = new Joystick(1);
+        mSecondaryDriverStick = new Joystick(1);
+        mSwitchboard = new Joystick(2);
     }
 
      //DRIVER CONTROLLER
@@ -107,7 +109,33 @@ public class Setup
 	public boolean getSecondaryElevatorLowButton(){
     	return mSecondaryDriverStick.getRawButton(1);
     }
-    
+
+    //Switch Board
+    public boolean GetLEDWarningButton(){
+    	return mSwitchboard.getRawButton(1);
+    }
+    public boolean GetLEDRainbowButton(){
+    	return mSwitchboard.getRawButton(2);
+    }
+    public boolean GetLEDCargoButton(){
+    	return mSwitchboard.getRawButton(3);
+    }
+    public boolean GetLEDFireButton(){
+    	return mSwitchboard.getRawButton(4);
+    }
+    public boolean GetLEDTeamBlueButton(){
+    	return mSwitchboard.getRawButton(5);
+    }
+    public boolean GetLEDTeamRedButton(){
+    	return mSwitchboard.getRawButton(6);
+    }
+    public boolean GetLEDHatchButton(){
+    	return mSwitchboard.getRawButton(7);
+    }
+    public boolean GetLEDIdleButton(){
+    	return mSwitchboard.getRawButton(8);
+    }
+   
 //----------------------------------------------------------------------------Hardware Map------------------------------------------------------------------------------------//
 
 //Speed Controllers

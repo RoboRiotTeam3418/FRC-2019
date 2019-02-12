@@ -51,7 +51,7 @@ import java.util.Scanner;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import frc.robot.subsystems.LED;
 
 
 public class Robot extends IterativeRobot  {
@@ -61,20 +61,22 @@ public class Robot extends IterativeRobot  {
   Drivetrain mDrivetrain;
   Elevator mElevator;
   Intake mIntake;
+  LED mLED;
   
-
   public void updateAllSubsystems(){
 		
 		mDrivetrain.updateSubsystem();
 	  mIntake.updateSubsystem();
-	  mElevator.updateSubsystem();
+    mElevator.updateSubsystem();
+    mLED.updateSubsystem();
   }
   
   public void stopAllSubsystems(){
 		mDrivetrain.stop();
 		mDrivetrain.lowGear();
 		mIntake.stop();
-		mElevator.stop();
+    mElevator.stop();
+    mLED.Idle();
 	}
 
 
@@ -83,7 +85,8 @@ public class Robot extends IterativeRobot  {
 
     mSetup = Setup.getInstance();
     mDrivetrain = Drivetrain.getInstance();
-		mIntake = Intake.getInstance();
+    mIntake = Intake.getInstance();
+    mLED = LED.getInstance();
     stopAllSubsystems();
   
   }
@@ -106,7 +109,6 @@ public class Robot extends IterativeRobot  {
   @Override
 	public void disabledInit(){
 		
-      
       mDrivetrain.highGear();
   
 		  stopAllSubsystems();
@@ -115,7 +117,32 @@ public class Robot extends IterativeRobot  {
   
   @Override
 	public void disabledPeriodic() {
-	
+	 //LED Lights
+   if(mSetup.GetLEDRainbowButton()){
+    mLED.Rainbow();
+  }
+  if(mSetup.GetLEDCargoButton()){
+   mLED.Rainbow();
+ }
+ if(mSetup.GetLEDFireButton()){
+   mLED.Rainbow();
+ }
+ if(mSetup.GetLEDTeamBlueButton()){
+   mLED.Rainbow();
+ }
+ if(mSetup.GetLEDTeamRedButton()){
+   mLED.Rainbow();
+ }
+ if(mSetup.GetLEDHatchButton()){
+   mLED.Rainbow();
+ }
+ if(mSetup.GetLEDIdleButton()){
+   mLED.Rainbow();
+ }
+ if(mSetup.GetLEDWarningButton()){
+   mLED.Rainbow();
+ }
+
   }
 
   @Override
@@ -170,6 +197,33 @@ public class Robot extends IterativeRobot  {
     if(mSetup.getSecondaryElevatorLowButton()) {
       mElevator.setElevatorPosition("LOW");
      } 
+
+
+     //LED Lights
+     if(mSetup.GetLEDRainbowButton()){
+       mLED.Rainbow();
+     }
+     if(mSetup.GetLEDCargoButton()){
+      mLED.Rainbow();
+    }
+    if(mSetup.GetLEDFireButton()){
+      mLED.Rainbow();
+    }
+    if(mSetup.GetLEDTeamBlueButton()){
+      mLED.Rainbow();
+    }
+    if(mSetup.GetLEDTeamRedButton()){
+      mLED.Rainbow();
+    }
+    if(mSetup.GetLEDHatchButton()){
+      mLED.Rainbow();
+    }
+    if(mSetup.GetLEDIdleButton()){
+      mLED.Rainbow();
+    }
+    if(mSetup.GetLEDWarningButton()){
+      mLED.Rainbow();
+    }
 
     updateAllSubsystems();
 
