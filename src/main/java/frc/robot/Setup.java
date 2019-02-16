@@ -24,6 +24,7 @@ public class Setup
     
 
 //----------------------------------------------------------------------------Controls-----------------------------------------------------------------------------------------//
+    
     //Creates Joystick Object
     Joystick mDriverStick;
     Joystick mSecondaryDriverStick;
@@ -161,7 +162,7 @@ void HardwareMap() {
     {
         //Speed Controllers
         mIntakeHardware = new VictorSPX(Setup.kIntakeId);
-        mMrHushHardware = new VictorSPX(Setup.kMrHushId);
+        mMrHuckHardware = new VictorSPX(Setup.kMrHuckId);
         
         mSpoolHardware = new TalonSRX(Setup.kSpoolId);
         mIntakeRotaryHardware = new TalonSRX(Setup.kIntakeRotaryId);
@@ -205,8 +206,8 @@ public static int kRightRearMotorId = 3;
 //Intake
 public static int kIntakeId = 5;
 public static int kIntakeRotaryId = 6;
-public static int kMrHushId = 7;
-
+public static int kMrHuckId = 7;
+public static int kMrHuckJrId = 8;
 
 //Elevator
 public static int kSpoolId = 8;
@@ -225,10 +226,10 @@ public static int kElevatorLaserId= 0;
 public static int kLeftAllignLaserId = 1;
 public static int kRightAllignLaserId = 2;
 
-
-
 //DIO
 public static int kElevatorBottomProx = 0;
 public static int kElevatorTopProx = 1;
+public static int kIntakeCargoLimit = 2;
+public static int kIntakeHatchLimit = 3;
 
 }
