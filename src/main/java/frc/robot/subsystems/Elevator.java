@@ -16,7 +16,7 @@ public class Elevator extends Subsystem {
 	static Elevator mInstance=new Elevator();
 	DigitalInput mElevatorTopProxHardware;
 	DigitalInput mElevatorBottomProxHardware;
-	AnalogInput mElevatorLaser;
+	LIDAR mElevatorLaser;
 	Setup mSetup = new Setup();
 
     //Elevator Positions
@@ -31,7 +31,7 @@ public class Elevator extends Subsystem {
 {
     mElevatorBottomProxHardware = new DigitalInput(Setup.kElevatorBottomProx);
 	mElevatorTopProxHardware = new DigitalInput(Setup.kElevatorTopProx);
-	mElevatorLaser = new AnalogInput(Setup.kElevatorLaserId);
+	mElevatorLaser = new LIDAR(new DigitalInput(Setup.kElevatorLaser));
 
 }
 
@@ -68,15 +68,11 @@ public class Elevator extends Subsystem {
 
     public void setElevatorPosition(String position)
 	{
-		double volts = mElevatorLaser.getVoltage();
-		double raw = mElevatorLaser.getValue();
-		double averageRaw = mElevatorLaser.getAverageValue();
-		double averageVolts = mElevatorLaser.getAverageVoltage();
-		
-		
+		double ElevatorDistance = mElevatorLaser.getDistance();
+			
 		if (position == "HIGH")
 		{
-			while (volts < elevatorHighPosition)
+			while (ElevatorDistance < elevatorHighPosition)
 			{
 				setElevatorSpeed(.25);
 			}
@@ -86,14 +82,14 @@ public class Elevator extends Subsystem {
 
 		if (position == "MIDDLE")
 		{
-			while (volts < elevatorMiddlePosition)
+			while (ElevatorDistance < elevatorMiddlePosition)
 			{
 				setElevatorSpeed(.25);
 			}
 			mSpool.set(ControlMode.PercentOutput,0);
 			mSpool1.set(ControlMode.PercentOutput,0);
 
-			while (volts > elevatorMiddlePosition)
+			while (ElevatorDistance > elevatorMiddlePosition)
 			{
 				setElevatorSpeed(-.25);
 			}
@@ -103,7 +99,7 @@ public class Elevator extends Subsystem {
 
 		if (position == "LOW")
 		{
-			while (volts > elevatorLowPosition)
+			while (ElevatorDistance > elevatorLowPosition)
 			{
 				setElevatorSpeed(-.25);
 			}
@@ -124,13 +120,10 @@ public class Elevator extends Subsystem {
 
 	@Override
 	public void updateSubsystem(){
+		
+		double ElevatorDistance = mElevatorLaser.getDistance();
 
-		double raw = mElevatorLaser.getValue();
-		double volts = mElevatorLaser.getVoltage();
-		double averageRaw = mElevatorLaser.getAverageValue();
-        double averageVolts = mElevatorLaser.getAverageVoltage();
-        //Limits
-
+		//Limits
         if (mElevatorBottomProxHardware.get() == true)
         {
 			mSpool.set(ControlMode.PercentOutput,0);
@@ -143,8 +136,7 @@ public class Elevator extends Subsystem {
 			mSpool1.set(ControlMode.PercentOutput,0);
 		}
 
-		System.out.println("Elevator Laser Raw" + raw);
-		System.out.println("Elevator Laser Volts" + volts);
+		System.out.println("Elevator Laser Distance" + ElevatorDistance);
 		//Update Laser
 	
 		outputToSmartDashboard();

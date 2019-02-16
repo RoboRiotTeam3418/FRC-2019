@@ -251,7 +251,6 @@ public static int kShifterSolenoidId = 0;
 //ANALOG (0-4) 
 
 //Lasers
-public static int kElevatorLaserId= 0;
 public static int kLeftAllignLaserId = 1;
 public static int kRightAllignLaserId = 2;
 
@@ -260,6 +259,6 @@ public static int kElevatorBottomProx = 0;
 public static int kElevatorTopProx = 1;
 public static int kIntakeCargoLimit = 2;
 public static int kIntakeHatchLimit = 3;
-public static int kLASER = 4;
+public static int kElevatorLaser = 4;
 
 }
