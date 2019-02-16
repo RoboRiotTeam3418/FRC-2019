@@ -17,6 +17,7 @@ public class Elevator extends Subsystem {
 	DigitalInput mElevatorTopProxHardware;
 	DigitalInput mElevatorBottomProxHardware;
 	AnalogInput mElevatorLaser;
+	Setup mSetup;
 
     //Elevator Positions
     double elevatorHighPosition = 0;
@@ -48,11 +49,11 @@ public class Elevator extends Subsystem {
 			System.out.println("Elevator Speed" + speed);
      	 	mSpool.set(ControlMode.PercentOutput,speed);
 		 }
-		 else if((elevatorBottomProx = true) && (speed > 0))
+		 else if((elevatorBottomProx = true) && (mSetup.getSecondaryElevatorAnalog() > 0))
 		 {
 			mSpool.set(ControlMode.PercentOutput,speed);
 		 }
-		 else if((elevatorTopProx = false) && (speed < 0))
+		 else if((elevatorTopProx = false) && (mSetup.getSecondaryElevatorAnalog() < 0))
 		 {
 			mSpool.set(ControlMode.PercentOutput,speed);
 		 }
@@ -77,6 +78,7 @@ public class Elevator extends Subsystem {
 			{
 				setElevatorSpeed(.25);
 			}
+			mSpool.set(ControlMode.PercentOutput,0);
 		} 
 
 		if (position == "MIDDLE")
@@ -85,11 +87,13 @@ public class Elevator extends Subsystem {
 			{
 				setElevatorSpeed(.25);
 			}
+			mSpool.set(ControlMode.PercentOutput,0);
 
 			while (volts > elevatorMiddlePosition)
 			{
 				setElevatorSpeed(-.25);
 			}
+			mSpool.set(ControlMode.PercentOutput,0);
 		} 
 
 		if (position == "LOW")
@@ -98,6 +102,7 @@ public class Elevator extends Subsystem {
 			{
 				setElevatorSpeed(-.25);
 			}
+			mSpool.set(ControlMode.PercentOutput,0);
 		}
 		} 
 
@@ -118,17 +123,20 @@ public class Elevator extends Subsystem {
         double averageVolts = mElevatorLaser.getAverageVoltage();
         //Limits
 
-        if ((elevatorBottomProx = true) && (elevatorTopProx = true))
+        if (elevatorBottomProx = true)
         {
-            setElevatorSpeed(0);
             mSpool.set(ControlMode.PercentOutput,0);
-        } 
+		} 
+		
+		if (elevatorTopProx = true)
+		{
+			mSpool.set(ControlMode.PercentOutput,0);
+		}
 
 		System.out.println("Elevator Laser Raw" + raw);
 		System.out.println("Elevator Laser Volts" + volts);
 		//Update Laser
-		
-    
+	
 		outputToSmartDashboard();
 	}
 	
@@ -136,7 +144,5 @@ public class Elevator extends Subsystem {
 	public void outputToSmartDashboard() {
 		
 	}
-
-
 
 }

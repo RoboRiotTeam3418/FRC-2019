@@ -23,6 +23,7 @@ public class Intake extends Subsystem
 	private VictorSPX mIntake;
 	private TalonSRX mIntakeRotary;
 	private VictorSPX mMrHuck;
+	private VictorSPX mMrHuckJr;
 
 	DigitalInput mIntakeCargoLimit;
 	DigitalInput mIntakeHatchLimit;
@@ -33,6 +34,9 @@ public class Intake extends Subsystem
 public Intake() {
 
 		mIntake= new VictorSPX(Setup.kIntakeId);
+		mIntake.setInverted(false);
+
+		mMrHuck = new VictorSPX(Setup.kMrHuckId);
 		mIntake.setInverted(false);
 
 		mMrHuck = new VictorSPX(Setup.kMrHuckId);
@@ -71,6 +75,7 @@ public Intake() {
 
 	public void setCargoIntakeSpeed(double speed) {
 		mIntake.set(ControlMode.PercentOutput, speed);
+
 	}
 
 	//-------------------------------------------------------------------------------Intake Hatch----------------------------------------------------------------------------------//
@@ -92,6 +97,7 @@ public Intake() {
 
 	public void setIntakeHatchSpeed(double speed) {
 		mMrHuck.set(ControlMode.PercentOutput, speed);
+		mMrHuckJr.set(ControlMode.PercentOutput, speed);
 	}
 
 //-------------------------------------------------------------------------------Rotary Intake Control ----------------------------------------------------------------------------------//

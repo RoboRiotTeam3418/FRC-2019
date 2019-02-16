@@ -178,7 +178,7 @@ public class Robot extends IterativeRobot  {
 		if(mSetup.getSecondaryCargoIntakeButton()) {
       mIntake.intakeCargo();
      } 
-      else if(mSetup.getSecondaryCargoOuttakeButton())
+    else if(mSetup.getSecondaryCargoOuttakeButton())
     { 
 			mIntake.outtakeCargo();
 		}
@@ -190,7 +190,7 @@ public class Robot extends IterativeRobot  {
 		if(mSetup.getMrHuckSuckButton()) {
       mIntake.IntakeHatch();
      } 
-      else if(mSetup.getMrHuckStopButton())
+    else if(mSetup.getMrHuckStopButton())
     { 
 			mIntake.stopSucking();
 		}
