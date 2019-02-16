@@ -13,21 +13,19 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Elevator extends Subsystem {
 
-	static Elevator mInstance;
+	static Elevator mInstance=new Elevator();
 	DigitalInput mElevatorTopProxHardware;
 	DigitalInput mElevatorBottomProxHardware;
 	AnalogInput mElevatorLaser;
-	Setup mSetup;
+	Setup mSetup = new Setup();
 
     //Elevator Positions
     double elevatorHighPosition = 0;
 	double elevatorMiddlePosition = 0;
 	double elevatorLowPosition = 0;
 	
-    boolean elevatorBottomProx = mElevatorBottomProxHardware.get();
-    boolean elevatorTopProx = mElevatorTopProxHardware.get();
-
-	TalonSRX mSpool, SpoolHardware = new TalonSRX(Setup.kSpoolId);
+	TalonSRX mSpool = new TalonSRX(Setup.kSpoolId);
+	VictorSPX mSpool1 = new VictorSPX(Setup.kSpoolId1);
     
     public Elevator() 
 {
@@ -44,22 +42,26 @@ public class Elevator extends Subsystem {
     public void setElevatorSpeed(double speed)
 
 	 {
-		 if((elevatorBottomProx = false) && (elevatorTopProx = false))
+		 if((mElevatorBottomProxHardware.get() == false) && (mElevatorTopProxHardware.get() == false))
 		 {
 			System.out.println("Elevator Speed" + speed);
-     	 	mSpool.set(ControlMode.PercentOutput,speed);
+			mSpool.set(ControlMode.PercentOutput,speed);
+			mSpool1.set(ControlMode.PercentOutput,speed);
 		 }
-		 else if((elevatorBottomProx = true) && (mSetup.getSecondaryElevatorAnalog() > 0))
+		 else if((mElevatorBottomProxHardware.get() == true) && (mSetup.getSecondaryElevatorAnalog() > 0))
 		 {
 			mSpool.set(ControlMode.PercentOutput,speed);
+			mSpool1.set(ControlMode.PercentOutput,speed);
 		 }
-		 else if((elevatorTopProx = false) && (mSetup.getSecondaryElevatorAnalog() < 0))
+		 else if((mElevatorTopProxHardware.get() == false) && (mSetup.getSecondaryElevatorAnalog() < 0))
 		 {
 			mSpool.set(ControlMode.PercentOutput,speed);
+			mSpool1.set(ControlMode.PercentOutput,speed);
 		 }
 		 else 
 		 {
 			mSpool.set(ControlMode.PercentOutput,0);
+			mSpool1.set(ControlMode.PercentOutput,0);
 		 }
      	
      }
@@ -79,6 +81,7 @@ public class Elevator extends Subsystem {
 				setElevatorSpeed(.25);
 			}
 			mSpool.set(ControlMode.PercentOutput,0);
+			mSpool1.set(ControlMode.PercentOutput,0);
 		} 
 
 		if (position == "MIDDLE")
@@ -88,12 +91,14 @@ public class Elevator extends Subsystem {
 				setElevatorSpeed(.25);
 			}
 			mSpool.set(ControlMode.PercentOutput,0);
+			mSpool1.set(ControlMode.PercentOutput,0);
 
 			while (volts > elevatorMiddlePosition)
 			{
 				setElevatorSpeed(-.25);
 			}
 			mSpool.set(ControlMode.PercentOutput,0);
+			mSpool1.set(ControlMode.PercentOutput,0);
 		} 
 
 		if (position == "LOW")
@@ -103,6 +108,7 @@ public class Elevator extends Subsystem {
 				setElevatorSpeed(-.25);
 			}
 			mSpool.set(ControlMode.PercentOutput,0);
+			mSpool1.set(ControlMode.PercentOutput,0);
 		}
 		} 
 
@@ -110,7 +116,9 @@ public class Elevator extends Subsystem {
     @Override
 	public void stop()
 	{
-    	mSpool.set(ControlMode.PercentOutput,0);
+		setElevatorSpeed(0);
+		System.out.println("Stopping Elevator");
+
     }
     
 
@@ -123,14 +131,16 @@ public class Elevator extends Subsystem {
         double averageVolts = mElevatorLaser.getAverageVoltage();
         //Limits
 
-        if (elevatorBottomProx = true)
+        if (mElevatorBottomProxHardware.get() == true)
         {
-            mSpool.set(ControlMode.PercentOutput,0);
+			mSpool.set(ControlMode.PercentOutput,0);
+			mSpool1.set(ControlMode.PercentOutput,0);
 		} 
 		
-		if (elevatorTopProx = true)
+		if (mElevatorTopProxHardware.get() == true)
 		{
 			mSpool.set(ControlMode.PercentOutput,0);
+			mSpool1.set(ControlMode.PercentOutput,0);
 		}
 
 		System.out.println("Elevator Laser Raw" + raw);

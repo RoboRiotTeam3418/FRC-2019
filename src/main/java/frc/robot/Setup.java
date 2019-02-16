@@ -22,13 +22,18 @@ public class Setup
         return mInstance;
     }
     
+public Setup()
+{
+this.ControlBoard();
 
+}
 //----------------------------------------------------------------------------Controls-----------------------------------------------------------------------------------------//
     
     //Creates Joystick Object
     Joystick mDriverStick;
     Joystick mSecondaryDriverStick;
     Joystick mSwitchboard;
+ 
 
     //Initialize Joystick Object
     void ControlBoard() {
@@ -192,6 +197,7 @@ void HardwareMap() {
 
         //Pneumatics
         mLeftShifterHardware = new Solenoid(Setup.kShifterSolenoidId);
+        mRightShifterHardware = new Solenoid(Setup.kShifterSolenoidId);
         mCompressorHardware = new Compressor(0);
 
         //Sensors
@@ -233,8 +239,8 @@ public static int kMrHuckId = 7;
 public static int kMrHuckJrId = 8;
 
 //Elevator
-public static int kSpoolId = 8;
-
+public static int kSpoolId = 9;
+public static int kSpoolId1 = 10;
 //SOLENOIDS (0-7)
 
 
@@ -254,5 +260,6 @@ public static int kElevatorBottomProx = 0;
 public static int kElevatorTopProx = 1;
 public static int kIntakeCargoLimit = 2;
 public static int kIntakeHatchLimit = 3;
+public static int kLASER = 4;
 
 }

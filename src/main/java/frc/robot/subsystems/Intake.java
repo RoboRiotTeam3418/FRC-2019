@@ -25,12 +25,9 @@ public class Intake extends Subsystem
 	private VictorSPX mMrHuck;
 	private VictorSPX mMrHuckJr;
 
-	DigitalInput mIntakeCargoLimit;
-	DigitalInput mIntakeHatchLimit;
+	private DigitalInput mIntakeCargoLimit;
+	private DigitalInput mIntakeHatchLimit;
 	
-	boolean IntakeCargoLimit = mIntakeCargoLimit.get();
-	boolean IntakeHatchLimit = mIntakeHatchLimit.get();
-
 public Intake() {
 
 		mIntake= new VictorSPX(Setup.kIntakeId);
@@ -39,14 +36,14 @@ public Intake() {
 		mMrHuck = new VictorSPX(Setup.kMrHuckId);
 		mIntake.setInverted(false);
 
-		mMrHuck = new VictorSPX(Setup.kMrHuckId);
+		mMrHuckJr = new VictorSPX(Setup.kMrHuckJrId);
 		mIntake.setInverted(false);
 
 		mIntake.set(ControlMode.PercentOutput, 0);
 		mIntakeRotary = new TalonSRX(Setup.kIntakeRotaryId);
 
-		mIntakeCargoLimit = new DigitalInput(Setup.kElevatorBottomProx);
-		mIntakeHatchLimit = new DigitalInput(Setup.kElevatorTopProx);
+		mIntakeCargoLimit = new DigitalInput(Setup.kIntakeCargoLimit);
+		mIntakeHatchLimit = new DigitalInput(Setup.kIntakeHatchLimit);
 
 
 		System.out.println("Intake Done Initializing.");
@@ -59,7 +56,11 @@ public Intake() {
     	STOP;
     }
 
-	 private IntakeCargoState mIntakeCargoState;
+	 private IntakeCargoState mIntakeCargoState=IntakeCargoState.STOP;
+
+	 public IntakeCargoState getIntakeCargoState() {
+		return mIntakeCargoState;
+	}
 	 
 	public void intakeCargo(){
 		mIntakeCargoState = IntakeCargoState.INTAKE;
@@ -85,7 +86,7 @@ public Intake() {
     	STOP;
     }
 
-	 private IntakeHatchState mIntakeHatchState;
+	 public IntakeHatchState mIntakeHatchState=IntakeHatchState.STOP;
 	
 	public void IntakeHatch(){
 		mIntakeHatchState = IntakeHatchState.SUCK;
@@ -100,6 +101,10 @@ public Intake() {
 		mMrHuckJr.set(ControlMode.PercentOutput, speed);
 	}
 
+	public IntakeHatchState getIntakeHatchState() {
+		return mIntakeHatchState;
+	}
+
 //-------------------------------------------------------------------------------Rotary Intake Control ----------------------------------------------------------------------------------//
 
 public enum IntakeRotaryState {
@@ -107,7 +112,11 @@ public enum IntakeRotaryState {
 	HATCH;
 }
 
- private IntakeRotaryState mIntakeRotaryState;
+ private IntakeRotaryState mIntakeRotaryState=IntakeRotaryState.HATCH;
+
+ public IntakeRotaryState getIntakeRotaryState() {
+	return mIntakeRotaryState;
+}
 
  public void SetIntakeRotaryCargoState(){
 	mIntakeRotaryState = IntakeRotaryState.CARGO;
@@ -120,10 +129,10 @@ public void SetIntakeRotaryHatchState(){
 public void SetIntakeRotaryCargo(){
 
 	//Checks if it is right state
-	if ((IntakeCargoLimit = false) && (IntakeHatchLimit = true))
+	if ((mIntakeCargoLimit.get() == false) && (mIntakeHatchLimit.get() == true))
 	{
 		//Move To Cargo Limit
-		while (IntakeCargoLimit = false)
+		while (mIntakeCargoLimit.get() == false)
 		{
 			mIntakeRotary.set(ControlMode.PercentOutput, -.25);
 		}
@@ -141,10 +150,10 @@ public void SetIntakeRotaryCargo(){
 public void SetIntakeRotaryHatch(){
 
 	//Checks if it is right state
-	if ((IntakeCargoLimit = true) && (IntakeHatchLimit = false))
+	if ((mIntakeCargoLimit.get() == true) && (mIntakeHatchLimit.get() == false))
 	{
 		//Move To Cargo Limit
-		while (IntakeHatchLimit = false)
+		while (mIntakeCargoLimit.get() == false)
 		{
 			mIntakeRotary.set(ControlMode.PercentOutput, .25);
 		}
@@ -164,6 +173,7 @@ public void SetIntakeRotaryHatch(){
 	@Override
 	public void updateSubsystem()
 	{
+
 		switch(mIntakeCargoState) {
 
 		case INTAKE:

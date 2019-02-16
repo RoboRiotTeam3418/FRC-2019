@@ -20,8 +20,7 @@ public class Drivetrain extends Subsystem {
 	
 	
     //Shifters
-    Solenoid mLeftSolenoid;
-    Solenoid mRightSolenoid;
+    Solenoid mSolenoid;
    
     //Drive Motors
     CANSparkMax mRightFrontDrive;
@@ -30,10 +29,9 @@ public class Drivetrain extends Subsystem {
     CANSparkMax mLeftRearDrive;
 
     public Drivetrain(){
-    
-    	mLeftSolenoid = Setup.getInstance().mLeftShifterHardware;
-    	mRightSolenoid = Setup.getInstance().mRightShifterHardware;
-        
+	
+		mSolenoid = new Solenoid(Setup.kShifterSolenoidId);
+		
     	mLeftFrontDrive = new CANSparkMax(Setup.kLeftFrontMotorId, MotorType.kBrushless);
     	mLeftFrontDrive.set(0);
     	mLeftFrontDrive.setInverted(false);
@@ -90,14 +88,14 @@ public class Drivetrain extends Subsystem {
     //Gears
     private void setLowGear() {
     	
-    	mLeftSolenoid.set(false);
-    	mRightSolenoid.set(false);
+    	mSolenoid.set(false);
+    	
     }
 	
     private void setHighGear() {
 
-    	mLeftSolenoid.set(true);
-    	mRightSolenoid.set(true);
+    	mSolenoid.set(true);
+    	
     }
     
     
