@@ -76,7 +76,7 @@ public class Robot extends IterativeRobot  {
 		mDrivetrain.lowGear();
 		mIntake.stop();
     mElevator.stop();
-    mLED.Idle();
+    mLED.Clear();
 	}
 
 
@@ -117,31 +117,36 @@ public class Robot extends IterativeRobot  {
   
   @Override
 	public void disabledPeriodic() {
+
+
 	 //LED Lights
-   if(mSetup.GetLEDRainbowButton()){
-    mLED.Rainbow();
+   if(mSetup.GetLEDClearButton()){
+    mLED.Clear();
   }
-  if(mSetup.GetLEDCargoButton()){
-   mLED.Rainbow();
- }
- if(mSetup.GetLEDFireButton()){
-   mLED.Rainbow();
- }
- if(mSetup.GetLEDTeamBlueButton()){
-   mLED.Rainbow();
- }
- if(mSetup.GetLEDTeamRedButton()){
-   mLED.Rainbow();
- }
- if(mSetup.GetLEDHatchButton()){
-   mLED.Rainbow();
- }
- if(mSetup.GetLEDIdleButton()){
-   mLED.Rainbow();
- }
- if(mSetup.GetLEDWarningButton()){
-   mLED.Rainbow();
- }
+   if(mSetup.GetLEDRainbowButton()){
+     mLED.Rainbow();
+   }
+   if(mSetup.GetLEDCargoButton()){
+    mLED.Cargo();
+  }
+  if(mSetup.GetLEDRedFlashyThingButton()){
+    mLED.RedFlashyThing();
+  }
+  if(mSetup.GetLEDTeamBlueButton()){
+    mLED.TeamBlue();
+  }
+  if(mSetup.GetLEDTeamRedButton()){
+    mLED.TeamRed();
+  }
+  if(mSetup.GetLEDHatchButton()){
+    mLED.Hatch();
+  }
+  if(mSetup.GetLEDElevatorMaxHeightyButton()){
+    mLED.ElevatorMaxHeighty();
+  }
+  if(mSetup.GetLEDNoButton()){
+    mLED.Clear();
+  }
 
   }
 
@@ -160,19 +165,7 @@ public class Robot extends IterativeRobot  {
     
     //Controls
 
-    //Intake
-		if(mSetup.getSecondaryIntakeButton()) {
-      mIntake.intake();
-     } 
-      else if(mSetup.getSecondaryOutakeButton())
-    { 
-			mIntake.reverse();
-		}
-		else {
-			mIntake.stopIntakeMotor();
-		}
-		
-		//Drive train 
+    //Drive train 
 		if(mSetup.getDriverHighGearButton()) {
 			mDrivetrain.highGear();
 		}
@@ -180,6 +173,39 @@ public class Robot extends IterativeRobot  {
 			mDrivetrain.lowGear();
 		}
 		mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY(), mSetup.getDriverRightY());
+
+    //Cargo Intake
+		if(mSetup.getSecondaryCargoIntakeButton()) {
+      mIntake.intakeCargo();
+     } 
+      else if(mSetup.getSecondaryCargoOuttakeButton())
+    { 
+			mIntake.outtakeCargo();
+		}
+		else {
+			mIntake.stopCargoIntakeMotor();
+    }
+    
+     //Hatch Intake
+		if(mSetup.getMrHuckSuckButton()) {
+      mIntake.IntakeHatch();
+     } 
+      else if(mSetup.getMrHuckStopButton())
+    { 
+			mIntake.stopSucking();
+		}
+		else {
+			mIntake.stopSucking();
+		}
+    
+    //Intake Rotary
+    if(mSetup.getSecondaryIntakeRotaryCargoButton()) {
+      mIntake.SetIntakeRotaryCargo();
+     } 
+
+     if(mSetup.getSecondaryIntakeRotaryHatchButton()) {
+      mIntake.SetIntakeRotaryHatch();
+     } 
 
 		//Elevator Analog
 		mElevator.setElevatorSpeed(mSetup.getSecondaryElevatorAnalog());
@@ -200,29 +226,32 @@ public class Robot extends IterativeRobot  {
 
 
      //LED Lights
+     if(mSetup.GetLEDClearButton()){
+      mLED.Clear();
+    }
      if(mSetup.GetLEDRainbowButton()){
        mLED.Rainbow();
      }
      if(mSetup.GetLEDCargoButton()){
-      mLED.Rainbow();
+      mLED.Cargo();
     }
-    if(mSetup.GetLEDFireButton()){
-      mLED.Rainbow();
+    if(mSetup.GetLEDRedFlashyThingButton()){
+      mLED.RedFlashyThing();
     }
     if(mSetup.GetLEDTeamBlueButton()){
-      mLED.Rainbow();
+      mLED.TeamBlue();
     }
     if(mSetup.GetLEDTeamRedButton()){
-      mLED.Rainbow();
+      mLED.TeamRed();
     }
     if(mSetup.GetLEDHatchButton()){
-      mLED.Rainbow();
+      mLED.Hatch();
     }
-    if(mSetup.GetLEDIdleButton()){
-      mLED.Rainbow();
+    if(mSetup.GetLEDElevatorMaxHeightyButton()){
+      mLED.ElevatorMaxHeighty();
     }
-    if(mSetup.GetLEDWarningButton()){
-      mLED.Rainbow();
+    if(mSetup.GetLEDNoButton()){
+      mLED.Clear();
     }
 
     updateAllSubsystems();

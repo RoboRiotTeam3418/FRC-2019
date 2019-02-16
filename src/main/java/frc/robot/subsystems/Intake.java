@@ -65,7 +65,7 @@ public Intake() {
 		mIntakeCargoState = IntakeCargoState.OUTTAKE;
 	}
 
-	public void stopIntakeMotor(){
+	public void stopCargoIntakeMotor(){
 		mIntakeCargoState = IntakeCargoState.STOP;
 	}
 

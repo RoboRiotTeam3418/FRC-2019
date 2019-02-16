@@ -75,22 +75,31 @@ public class Setup
 
     //Secondary Functional Controls
 
-    //Intake Motors
-    public boolean getSecondaryIntakeButton(){
-    	return mSecondaryDriverStick.getRawAxis(1) > .2;
+    //Cargo Intake 
+    public boolean getSecondaryCargoIntakeButton(){
+    	return mSecondaryDriverStick.getRawAxis(2) > .2;
     }
     
-    public boolean getSecondaryOutakeButton(){
-    	return mSecondaryDriverStick.getRawAxis(1) < -.2;
+    public boolean getSecondaryCargoOuttakeButton(){
+    	return mSecondaryDriverStick.getRawAxis(3) < -.2;
     }
     
-    //Mr Hush
-    public boolean getMrHushSuck(){
+    //Mr Huck
+    public boolean getMrHuckSuckButton(){
     	return mSecondaryDriverStick.getRawButton(5);
     }
     
-    public boolean getMrHushPush(){
+    public boolean getMrHuckStopButton(){
     	return mSecondaryDriverStick.getRawButton(6);
+    }
+
+    //Intake Rotary
+    public boolean getSecondaryIntakeRotaryCargoButton(){
+    	return mSecondaryDriverStick.getRawAxis(1) > .2;
+    }
+    
+    public boolean getSecondaryIntakeRotaryHatchButton(){
+    	return mSecondaryDriverStick.getRawAxis(1) < -.2;
     }
     
 
@@ -111,37 +120,51 @@ public class Setup
     	return mSecondaryDriverStick.getRawButton(1);
     }
 
+    //LED Controls 
+
     //Switch Board
-    public boolean GetLEDWarningButton(){
-    	return mSwitchboard.getRawButton(1);
+   public boolean GetLEDClearButton(){
+    return mSwitchboard.getRawButton(1);
+  }
+  public boolean GetLEDRainbowButton(){
+    return mSwitchboard.getRawButton(2);
+  }
+  public boolean GetLEDCargoButton(){
+    return mSwitchboard.getRawButton(3);
+  }
+  public boolean GetLEDRedFlashyThingButton(){
+    return mSwitchboard.getRawButton(4);
+  }
+  public boolean GetLEDTeamBlueButton(){
+    return mSwitchboard.getRawButton(5);
+  }
+  public boolean GetLEDTeamRedButton(){
+    return mSwitchboard.getRawButton(6);
+  }
+  public boolean GetLEDHatchButton(){
+    return mSwitchboard.getRawButton(7);
+  }
+  public boolean GetLEDElevatorMaxHeightyButton(){
+    return mSwitchboard.getRawButton(8);
+  }
+
+  public boolean GetLEDNoButton(){
+    if ( (GetLEDClearButton() == false) && (GetLEDRainbowButton() == false) && (GetLEDCargoButton() == false) && (GetLEDCargoButton() == false) && (GetLEDRedFlashyThingButton() == false) && (GetLEDTeamBlueButton() == false) && (GetLEDTeamRedButton() == false) && (GetLEDHatchButton() == false) && (GetLEDElevatorMaxHeightyButton() == false))
+    {
+      return true;
     }
-    public boolean GetLEDRainbowButton(){
-    	return mSwitchboard.getRawButton(2);
+    else
+    {
+      return false;
     }
-    public boolean GetLEDCargoButton(){
-    	return mSwitchboard.getRawButton(3);
-    }
-    public boolean GetLEDFireButton(){
-    	return mSwitchboard.getRawButton(4);
-    }
-    public boolean GetLEDTeamBlueButton(){
-    	return mSwitchboard.getRawButton(5);
-    }
-    public boolean GetLEDTeamRedButton(){
-    	return mSwitchboard.getRawButton(6);
-    }
-    public boolean GetLEDHatchButton(){
-    	return mSwitchboard.getRawButton(7);
-    }
-    public boolean GetLEDIdleButton(){
-    	return mSwitchboard.getRawButton(8);
-    }
-   
+  }
+
+
 //----------------------------------------------------------------------------Hardware Map------------------------------------------------------------------------------------//
 
 //Speed Controllers
 public VictorSPX mIntakeHardware;
-public VictorSPX mMrHushHardware;
+public VictorSPX mMrHuckHardware;
 
 public TalonSRX mSpoolHardware;
 public TalonSRX mIntakeRotaryHardware;

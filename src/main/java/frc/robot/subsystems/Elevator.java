@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 import frc.robot.Setup;
 import frc.robot.subsystems.*;
+
+import javax.lang.model.util.ElementScanner6;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -40,9 +43,24 @@ public class Elevator extends Subsystem {
     public void setElevatorSpeed(double speed)
 
 	 {
-     	System.out.println("Elevator Speed" + speed);
-     	mSpool.set(ControlMode.PercentOutput,speed);
-
+		 if((elevatorBottomProx = false) && (elevatorTopProx = false))
+		 {
+			System.out.println("Elevator Speed" + speed);
+     	 	mSpool.set(ControlMode.PercentOutput,speed);
+		 }
+		 else if((elevatorBottomProx = true) && (speed > 0))
+		 {
+			mSpool.set(ControlMode.PercentOutput,speed);
+		 }
+		 else if((elevatorTopProx = false) && (speed < 0))
+		 {
+			mSpool.set(ControlMode.PercentOutput,speed);
+		 }
+		 else 
+		 {
+			mSpool.set(ControlMode.PercentOutput,0);
+		 }
+     	
      }
 
     public void setElevatorPosition(String position)

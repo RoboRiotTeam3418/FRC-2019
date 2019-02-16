@@ -40,63 +40,64 @@ public class LED extends Subsystem
 
     }
 
-    public void Idle()
+    public void Clear()
     {
         //000
-        mLEDPort7.set(false);
-        mLEDPort8.set(false);
-        mLEDPort9.set(false);
+        mLEDPort7.set(true);
+        mLEDPort8.set(true);
+        mLEDPort9.set(true);
     }
     public void Rainbow()
     {
         //001
-        mLEDPort7.set(false);
-        mLEDPort8.set(false);
-        mLEDPort9.set(true);
-    }
-
-    public void Intake()
-    {
-        //010
-        mLEDPort7.set(false);
+        mLEDPort7.set(true);
         mLEDPort8.set(true);
         mLEDPort9.set(false);
     }
 
-    public void Fire()
+    public void Cargo()
+    {
+        //010
+        mLEDPort7.set(true);
+        mLEDPort8.set(false);
+        mLEDPort9.set(true);
+    }
+
+    public void RedFlashyThing()
     {
         //011
-        mLEDPort7.set(false);
-        mLEDPort8.set(true);
-        mLEDPort9.set(true);
+        mLEDPort7.set(true);
+        mLEDPort8.set(false);
+        mLEDPort9.set(false);
     }
     public void TeamBlue()
     {
         //100
-        mLEDPort7.set(true);
-        mLEDPort8.set(false);
-        mLEDPort9.set(false);
+        mLEDPort7.set(false);
+        mLEDPort8.set(true);
+        mLEDPort9.set(true);
     }
     public void TeamRed()
     {
         //101
-        mLEDPort7.set(true);
-        mLEDPort8.set(false);
-        mLEDPort9.set(true);
+        mLEDPort7.set(false);
+        mLEDPort8.set(true);
+        mLEDPort9.set(false);
     }
     public void Hatch()
     {
         //110
-        mLEDPort7.set(true);
-        mLEDPort8.set(true);
-        mLEDPort9.set(false);
-    }
-    public void IdleThing()
-    {
-        //111
-        mLEDPort7.set(true);
-        mLEDPort8.set(true);
+        mLEDPort7.set(false);
+        mLEDPort8.set(false);
         mLEDPort9.set(true);
     }
+    public void ElevatorMaxHeighty()
+    {
+        //111
+        mLEDPort7.set(false);
+        mLEDPort8.set(false);
+        mLEDPort9.set(false);
+    }
+
 
 }
