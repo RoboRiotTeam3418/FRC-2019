@@ -40,7 +40,7 @@ public double getDistance() {
 	 */
 	if (counter.get() < 1) {
 		if (printedWarningCount-- > 0) {
-			System.out.println("LidarLitePWM: waiting for distance measurement");
+			//System.out.println("LidarLitePWM: waiting for distance measurement");
 		}
 		return 0;
 	}

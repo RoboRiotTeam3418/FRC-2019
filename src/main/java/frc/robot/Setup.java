@@ -50,7 +50,7 @@ this.ControlBoard();
     }
     
     public double getDriverLeftY(){
-    	return -mDriverStick.getRawAxis(1);
+    	return -mDriverStick.getRawAxis(5)*-1;
     }
     
     public double getDriverRightX(){
@@ -58,7 +58,7 @@ this.ControlBoard();
     }
     
     public double getDriverRightY(){
-    	return -mDriverStick.getRawAxis(5);
+    	return -mDriverStick.getRawAxis(1)*-1;
     }
     
     public int getDriverPov(){
@@ -82,13 +82,13 @@ this.ControlBoard();
 
     //Cargo Intake 
     public boolean getSecondaryCargoIntakeButton(){
-      System.out.println(mSecondaryDriverStick.getRawAxis(2));
+      //System.out.println(mSecondaryDriverStick.getRawAxis(2));
     	return mSecondaryDriverStick.getRawAxis(2) > .2;
     }
     
     public boolean getSecondaryCargoOuttakeButton()
     {
-      System.out.println(mSecondaryDriverStick.getRawAxis(3));
+      //System.out.println(mSecondaryDriverStick.getRawAxis(3));
     	return mSecondaryDriverStick.getRawAxis(3) > .2;
     }
     
@@ -103,13 +103,18 @@ this.ControlBoard();
 
     //Intake Rotary
     public boolean getSecondaryIntakeRotaryCargoButton(){
-    	return mSecondaryDriverStick.getRawAxis(1) > .5;
+    	return  mSecondaryDriverStick.getPOV()>90 && mSecondaryDriverStick.getPOV()<270;
     }
     
     public boolean getSecondaryIntakeRotaryHatchButton(){
-    	return mSecondaryDriverStick.getRawAxis(1) < -.5;
+    	return mSecondaryDriverStick.getPOV()==0 || mSecondaryDriverStick.getPOV()==315 || mSecondaryDriverStick.getPOV()==45;
     }
-    
+    public double getSecondaryIntakeRotaryAnalog()
+    {
+      return mSecondaryDriverStick.getRawAxis(1) * -1;
+
+    }
+
 
     //Elevator 
     public double getSecondaryElevatorAnalog(){

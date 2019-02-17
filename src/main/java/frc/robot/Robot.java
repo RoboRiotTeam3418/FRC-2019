@@ -48,7 +48,10 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import java.util.Scanner;
 
+import edu.wpi.cscore.CameraServerJNI;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.subsystems.LED;
@@ -80,10 +83,119 @@ public class Robot extends IterativeRobot  {
     mLED.Clear();
 	}
 
+public void perodic()
+{
+    //System.out.println("Tele Periodic");
+    //Controls
+
+    // System.out.println("Bottom" + mElevator.mElevatorBottomProxHardware.get());
+    // System.out.println("Top" + mElevator.mElevatorTopProxHardware.get());
+
+    //System.out.println("Intake Rotary Hatch Limit " + mIntake.mIntakeHatchLimit.get());
+    //System.out.println("Intake Rotary Cargo Limit " + mIntake.mIntakeCargoLimit.get());
+
+    //Drive train 
+		if(mSetup.getDriverHighGearButton()) {
+			mDrivetrain.highGear();
+		}
+		if(mSetup.getDriverLowGearButton()) {
+			mDrivetrain.lowGear();
+		}
+		mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY(), mSetup.getDriverRightY());
+
+    //Cargo Intake
+		if(mSetup.getSecondaryCargoIntakeButton()) {
+      mIntake.intakeCargo();
+     } 
+   else if(mSetup.getSecondaryCargoOuttakeButton())
+    { 
+			mIntake.outtakeCargo();
+		}
+		else {
+			mIntake.stopCargoIntakeMotor();
+    }
+    
+     //Hatch Intake
+		if(mSetup.getMrHuckSuckButton()) {
+      mIntake.IntakeHatch();
+     } 
+    else if(mSetup.getMrHuckStopButton())
+    { 
+			mIntake.stopSucking();
+		}
+		// else {
+		// 	mIntake.stopSucking();
+		// }
+    
+    //Intake Rotary
+    if(mSetup.getSecondaryIntakeRotaryCargoButton()) {
+      mIntake.SetIntakeRotaryCargoState();
+     } 
+
+     if(mSetup.getSecondaryIntakeRotaryHatchButton()) {
+      mIntake.SetIntakeRotaryHatchState();
+     } 
+
+     
+
+		//Elevator Analog
+		mElevator.setElevatorSpeed(mSetup.getSecondaryElevatorAnalog());
+
+
+    //Elevator Positions
+    if(mSetup.getSecondaryElevatorHighButton()) {
+      mElevator.setElevatorPosition("HIGH");
+     } 
+
+    if(mSetup.getSecondaryElevatorMiddleButton()) {
+      mElevator.setElevatorPosition("MIDDLE");
+     } 
+
+    if(mSetup.getSecondaryElevatorLowButton()) {
+      mElevator.setElevatorPosition("LOW");
+     } 
+
+
+     //LED Lights
+     if(mSetup.GetLEDClearButton()){
+      mLED.Clear();
+    }
+     if(mSetup.GetLEDRainbowButton()){
+       mLED.Rainbow();
+     }
+     if(mSetup.GetLEDCargoButton()){
+      mLED.Cargo();
+    }
+    if(mSetup.GetLEDRedFlashyThingButton()){
+      mLED.RedFlashyThing();
+    }
+    if(mSetup.GetLEDTeamBlueButton()){
+      mLED.TeamBlue();
+    }
+    if(mSetup.GetLEDTeamRedButton()){
+      mLED.TeamRed();
+    }
+    if(mSetup.GetLEDHatchButton()){
+      mLED.Hatch();
+    }
+    if(mSetup.GetLEDElevatorMaxHeightyButton()){
+      mLED.ElevatorMaxHeighty();
+    }
+    if(mSetup.GetLEDNoButton()){
+      mLED.Clear();
+    }
+
+    updateAllSubsystems();
+
+
+}
+
+
 
   @Override
   public void robotInit() {
 
+    //SmartDashboard.putStringArray("Front Camera" + mjpeg:http://10.34.18.85:1183/?action=stream); 
     mSetup = Setup.getInstance();
     mDrivetrain = Drivetrain.getInstance();
     mIntake = Intake.getInstance();
@@ -104,7 +216,7 @@ public class Robot extends IterativeRobot  {
 	
 	@Override
 	public void autonomousPeriodic() {
-//System.out.println("Auto Periodic");
+    perodic();
 		updateAllSubsystems();
 	}
 
@@ -165,106 +277,7 @@ public class Robot extends IterativeRobot  {
 
   @Override
   public void teleopPeriodic() {
-    //System.out.println("Tele Periodic");
-    //Controls
-
-    // System.out.println("Bottom" + mElevator.mElevatorBottomProxHardware.get());
-    // System.out.println("Top" + mElevator.mElevatorTopProxHardware.get());
-
-    System.out.println("Intake Rotary Hatch Limit " + mIntake.mIntakeHatchLimit.get());
-    //System.out.println("Intake Rotary Cargo Limit " + mIntake.mIntakeCargoLimit.get());
-
-    //Drive train 
-		if(mSetup.getDriverHighGearButton()) {
-			mDrivetrain.highGear();
-		}
-		if(mSetup.getDriverLowGearButton()) {
-			mDrivetrain.lowGear();
-		}
-		mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY(), mSetup.getDriverRightY());
-
-    //Cargo Intake
-		if(mSetup.getSecondaryCargoIntakeButton()) {
-      mIntake.intakeCargo();
-     } 
-   else if(mSetup.getSecondaryCargoOuttakeButton())
-    { 
-			mIntake.outtakeCargo();
-		}
-		else {
-			mIntake.stopCargoIntakeMotor();
-    }
-    
-     //Hatch Intake
-		if(mSetup.getMrHuckSuckButton()) {
-      mIntake.IntakeHatch();
-     } 
-    else if(mSetup.getMrHuckStopButton())
-    { 
-			mIntake.stopSucking();
-		}
-		else {
-			mIntake.stopSucking();
-		}
-    
-    //Intake Rotary
-    if(mSetup.getSecondaryIntakeRotaryCargoButton()) {
-      mIntake.SetIntakeRotaryCargoState();
-     } 
-
-     if(mSetup.getSecondaryIntakeRotaryHatchButton()) {
-      mIntake.SetIntakeRotaryHatchState();
-     } 
-
-		//Elevator Analog
-		mElevator.setElevatorSpeed(mSetup.getSecondaryElevatorAnalog());
-
-
-    //Elevator Positions
-    if(mSetup.getSecondaryElevatorHighButton()) {
-      mElevator.setElevatorPosition("HIGH");
-     } 
-
-    if(mSetup.getSecondaryElevatorMiddleButton()) {
-      mElevator.setElevatorPosition("MIDDLE");
-     } 
-
-    if(mSetup.getSecondaryElevatorLowButton()) {
-      mElevator.setElevatorPosition("LOW");
-     } 
-
-
-     //LED Lights
-     if(mSetup.GetLEDClearButton()){
-      mLED.Clear();
-    }
-     if(mSetup.GetLEDRainbowButton()){
-       mLED.Rainbow();
-     }
-     if(mSetup.GetLEDCargoButton()){
-      mLED.Cargo();
-    }
-    if(mSetup.GetLEDRedFlashyThingButton()){
-      mLED.RedFlashyThing();
-    }
-    if(mSetup.GetLEDTeamBlueButton()){
-      mLED.TeamBlue();
-    }
-    if(mSetup.GetLEDTeamRedButton()){
-      mLED.TeamRed();
-    }
-    if(mSetup.GetLEDHatchButton()){
-      mLED.Hatch();
-    }
-    if(mSetup.GetLEDElevatorMaxHeightyButton()){
-      mLED.ElevatorMaxHeighty();
-    }
-    if(mSetup.GetLEDNoButton()){
-      mLED.Clear();
-    }
-
-    updateAllSubsystems();
-
+    perodic();
   }
  
 

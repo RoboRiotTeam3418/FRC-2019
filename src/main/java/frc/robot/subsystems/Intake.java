@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.DigitalInput;
-
+import edu.wpi.first.wpilibj.Relay;
 public class Intake extends Subsystem
 {
 
@@ -20,6 +20,9 @@ public class Intake extends Subsystem
     	return mInstance;
     }
 
+	Setup mSetup;
+	
+
 	private VictorSPX mIntake;
 	private TalonSRX mIntakeRotary;
 	private VictorSPX mMrHuck;
@@ -28,7 +31,11 @@ public class Intake extends Subsystem
 	public DigitalInput mIntakeCargoLimit;
 	public DigitalInput mIntakeHatchLimit;
 	
+	public Relay mstopSuckingRelay;
+
 public Intake() {
+		
+	mSetup = new Setup();
 
 		mIntake= new VictorSPX(Setup.kIntakeId);
 		mIntake.setInverted(false);
@@ -45,7 +52,8 @@ public Intake() {
 		mIntakeCargoLimit = new DigitalInput(Setup.kIntakeCargoLimit);
 		mIntakeHatchLimit = new DigitalInput(Setup.kIntakeHatchLimit);
 
-
+		mstopSuckingRelay = new Relay(0);
+		mIntakeHatchState=IntakeHatchState.SUCK;
 		//System.out.println("Intake Done Initializing.");
     }
 //-------------------------------------------------------------------------------Intake Cargo----------------------------------------------------------------------------------//
@@ -129,7 +137,7 @@ public enum IntakeRotaryState {
 public void SetIntakeRotaryHatchState(){
 	if (!(mIntakeRotaryState==IntakeRotaryState.HATCHStart || mIntakeRotaryState==IntakeRotaryState.HATCHStop)){
 		mIntakeRotaryState = IntakeRotaryState.HATCHStart;
-		System.out.println("Go To Hatch");
+		//System.out.println("Go To Hatch");
 	}
 }
 
@@ -138,7 +146,7 @@ public void SetIntakeRotaryCargo(){
 		//Move To Cargo Limit
 		if (mIntakeCargoLimit.get() == true)
 		{
-			mIntakeRotary.set(ControlMode.PercentOutput, .25);
+			mIntakeRotary.set(ControlMode.PercentOutput, .5);
 		}
 		else
 		{
@@ -154,17 +162,50 @@ public void SetIntakeRotaryHatch(){
 	//Checks if it is right state
 	if (mIntakeHatchLimit.get() == true)
 	{	
-		mIntakeRotary.set(ControlMode.PercentOutput, -.25);
-		System.out.println("Going to Hatch");
+		mIntakeRotary.set(ControlMode.PercentOutput, -.5);
+		//System.out.println("Going to Hatch");
 	}
 	else
 	{
 		//Brake
 		mIntakeRotaryState=IntakeRotaryState.HATCHStop;
-		System.out.println("At Hatch");
+		//System.out.println("At Hatch");
 		mIntakeRotary.set(ControlMode.PercentOutput, 0);
 	}
 
+}
+
+public void setIntakeRotarySpeed()
+{
+	if ((mIntakeRotaryState != IntakeRotaryState.CARGOStop) && (mSetup.getSecondaryIntakeRotaryAnalog() < -.2))
+	{
+		if (mIntakeCargoLimit.get()) 
+		{
+			mIntakeRotary.set(ControlMode.PercentOutput, mSetup.getSecondaryIntakeRotaryAnalog() * .5);
+
+		}
+		else 
+		{
+			mIntakeRotary.set(ControlMode.PercentOutput, 0);
+			mIntakeRotaryState = IntakeRotaryState.CARGOStop;
+
+		}
+
+	}
+	else if ((mIntakeRotaryState != IntakeRotaryState.HATCHStop) && (mSetup.getSecondaryIntakeRotaryAnalog() > .2))
+	{
+		if (mIntakeHatchLimit.get()) 
+		{
+			mIntakeRotary.set(ControlMode.PercentOutput, mSetup.getSecondaryIntakeRotaryAnalog() * .5);
+
+		}
+		else 
+		{
+			mIntakeRotary.set(ControlMode.PercentOutput, 0);
+			mIntakeRotaryState = IntakeRotaryState.HATCHStop;
+
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------Important Robot Stuff ----------------------------------------------------------------------------------//
@@ -176,10 +217,10 @@ public void SetIntakeRotaryHatch(){
 		switch(mIntakeCargoState) {
 
 		case INTAKE:
-			setCargoIntakeSpeed(1);
+			setCargoIntakeSpeed(-1);
 			break;
 		case OUTTAKE:
-			setCargoIntakeSpeed(-1);
+			setCargoIntakeSpeed(1);
 			break;
 		case STOP:
 			setCargoIntakeSpeed(0);
@@ -192,9 +233,11 @@ public void SetIntakeRotaryHatch(){
 		switch(mIntakeHatchState) {
 
 			case SUCK:
+				mstopSuckingRelay.set(Relay.Value.kOff);
 				setIntakeHatchSpeed(1.0);
 				break;
 			case STOP:
+				mstopSuckingRelay.set(Relay.Value.kForward);
 				setIntakeHatchSpeed(0);
 				break;
 			default:
@@ -212,9 +255,10 @@ public void SetIntakeRotaryHatch(){
 				break;
 			default:
 			mIntakeRotary.set(ControlMode.PercentOutput, 0);
+			//setIntakeRotarySpeed();
 				break;
 			}
-
+			
 		outputToSmartDashboard();
 	}
 
