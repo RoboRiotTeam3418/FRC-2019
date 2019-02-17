@@ -82,11 +82,14 @@ this.ControlBoard();
 
     //Cargo Intake 
     public boolean getSecondaryCargoIntakeButton(){
+      System.out.println(mSecondaryDriverStick.getRawAxis(2));
     	return mSecondaryDriverStick.getRawAxis(2) > .2;
     }
     
-    public boolean getSecondaryCargoOuttakeButton(){
-    	return mSecondaryDriverStick.getRawAxis(3) < -.2;
+    public boolean getSecondaryCargoOuttakeButton()
+    {
+      System.out.println(mSecondaryDriverStick.getRawAxis(3));
+    	return mSecondaryDriverStick.getRawAxis(3) > .2;
     }
     
     //Mr Huck
@@ -100,17 +103,17 @@ this.ControlBoard();
 
     //Intake Rotary
     public boolean getSecondaryIntakeRotaryCargoButton(){
-    	return mSecondaryDriverStick.getRawAxis(1) > .2;
+    	return mSecondaryDriverStick.getRawAxis(1) > .5;
     }
     
     public boolean getSecondaryIntakeRotaryHatchButton(){
-    	return mSecondaryDriverStick.getRawAxis(1) < -.2;
+    	return mSecondaryDriverStick.getRawAxis(1) < -.5;
     }
     
 
     //Elevator 
     public double getSecondaryElevatorAnalog(){
-    	return mSecondaryDriverStick.getRawAxis(5);
+    	return mSecondaryDriverStick.getRawAxis(5)*-1;
 	}
 
 	public boolean getSecondaryElevatorHighButton(){
@@ -251,8 +254,8 @@ public static int kShifterSolenoidId = 0;
 //ANALOG (0-4) 
 
 //Lasers
-public static int kLeftAllignLaserId = 1;
-public static int kRightAllignLaserId = 2;
+// public static int kLeftAllignLaserId = 1;
+// public static int kRightAllignLaserId = 2;
 
 //DIO
 public static int kElevatorBottomProx = 0;

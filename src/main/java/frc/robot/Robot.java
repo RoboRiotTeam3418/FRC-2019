@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot  {
   }
   
   public void stopAllSubsystems(){
-    System.out.println("Robot Stopping");
+    //System.out.println("Robot Stopping");
 		mDrivetrain.stop();
 		mDrivetrain.lowGear();
 		mIntake.stop();
@@ -89,14 +89,14 @@ public class Robot extends IterativeRobot  {
     mIntake = Intake.getInstance();
     mLED = LED.getInstance();
     mElevator = Elevator.getInstance();
-    System.out.println("Robot Init");
+    //System.out.println("Robot Init");
     stopAllSubsystems();
   
   }
 
   @Override
 	public void autonomousInit() {
-    System.out.println("Auto Init");
+    //System.out.println("Auto Init");
 		stopAllSubsystems();
 		updateAllSubsystems();
 		
@@ -104,14 +104,14 @@ public class Robot extends IterativeRobot  {
 	
 	@Override
 	public void autonomousPeriodic() {
-System.out.println("Auto Periodic");
+//System.out.println("Auto Periodic");
 		updateAllSubsystems();
 	}
 
   
   @Override
 	public void disabledInit(){
-    System.out.println("Disabled Init");
+    //System.out.println("Disabled Init");
       mDrivetrain.highGear();
   
 		  stopAllSubsystems();
@@ -120,7 +120,7 @@ System.out.println("Auto Periodic");
   
   @Override
 	public void disabledPeriodic() {
-System.out.println("Disabled Periodic");
+//System.out.println("Disabled Periodic");
 
 	 //LED Lights
    if(mSetup.GetLEDClearButton()){
@@ -155,7 +155,7 @@ System.out.println("Disabled Periodic");
 
   @Override
 	public void teleopInit(){
-	 System.out.println("Tele Init");
+	 //System.out.println("Tele Init");
 		stopAllSubsystems();
 		mDrivetrain.lowGear();
     updateAllSubsystems();
@@ -165,8 +165,14 @@ System.out.println("Disabled Periodic");
 
   @Override
   public void teleopPeriodic() {
-    System.out.println("Tele Periodic");
+    //System.out.println("Tele Periodic");
     //Controls
+
+    // System.out.println("Bottom" + mElevator.mElevatorBottomProxHardware.get());
+    // System.out.println("Top" + mElevator.mElevatorTopProxHardware.get());
+
+    System.out.println("Intake Rotary Hatch Limit " + mIntake.mIntakeHatchLimit.get());
+    //System.out.println("Intake Rotary Cargo Limit " + mIntake.mIntakeCargoLimit.get());
 
     //Drive train 
 		if(mSetup.getDriverHighGearButton()) {
@@ -181,7 +187,7 @@ System.out.println("Disabled Periodic");
 		if(mSetup.getSecondaryCargoIntakeButton()) {
       mIntake.intakeCargo();
      } 
-    else if(mSetup.getSecondaryCargoOuttakeButton())
+   else if(mSetup.getSecondaryCargoOuttakeButton())
     { 
 			mIntake.outtakeCargo();
 		}
@@ -203,11 +209,11 @@ System.out.println("Disabled Periodic");
     
     //Intake Rotary
     if(mSetup.getSecondaryIntakeRotaryCargoButton()) {
-      mIntake.SetIntakeRotaryCargo();
+      mIntake.SetIntakeRotaryCargoState();
      } 
 
      if(mSetup.getSecondaryIntakeRotaryHatchButton()) {
-      mIntake.SetIntakeRotaryHatch();
+      mIntake.SetIntakeRotaryHatchState();
      } 
 
 		//Elevator Analog

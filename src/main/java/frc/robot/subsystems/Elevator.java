@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Elevator extends Subsystem {
 
 	static Elevator mInstance=new Elevator();
-	DigitalInput mElevatorTopProxHardware;
-	DigitalInput mElevatorBottomProxHardware;
+	public DigitalInput mElevatorTopProxHardware;
+	public DigitalInput mElevatorBottomProxHardware;
 	LIDAR mElevatorLaser;
 	Setup mSetup = new Setup();
 
@@ -42,11 +42,19 @@ public class Elevator extends Subsystem {
     public void setElevatorSpeed(double speed)
 
 	 {
-		 if((mElevatorBottomProxHardware.get() == false) && (mElevatorTopProxHardware.get() == false))
+		 if((mElevatorBottomProxHardware.get() == false) && (mElevatorTopProxHardware.get() == true))
 		 {
-			System.out.println("Elevator Speed" + speed);
-			mSpool.set(ControlMode.PercentOutput,speed);
-			mSpool1.set(ControlMode.PercentOutput,speed);
+			//System.out.println("Elevator Speed" + speed);
+			if((mElevatorLaser.getDistance()<=40) && (mSetup.getSecondaryElevatorAnalog() < 0 ))
+			{
+				mSpool.set(ControlMode.PercentOutput,speed*.25);
+				mSpool1.set(ControlMode.PercentOutput,speed*.25);
+			}
+			else
+			{
+				mSpool.set(ControlMode.PercentOutput,speed);
+				mSpool1.set(ControlMode.PercentOutput,speed);
+			}
 		 }
 		 else if((mElevatorBottomProxHardware.get() == true) && (mSetup.getSecondaryElevatorAnalog() > 0))
 		 {
@@ -72,7 +80,7 @@ public class Elevator extends Subsystem {
 			
 		if (position == "HIGH")
 		{
-			while (ElevatorDistance < elevatorHighPosition)
+			if ((ElevatorDistance < elevatorHighPosition) && (mElevatorTopProxHardware.get() == true))
 			{
 				setElevatorSpeed(.25);
 			}
@@ -82,27 +90,29 @@ public class Elevator extends Subsystem {
 
 		if (position == "MIDDLE")
 		{
-			while (ElevatorDistance < elevatorMiddlePosition)
+			if ((ElevatorDistance < elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
 			{
 				setElevatorSpeed(.25);
 			}
 			mSpool.set(ControlMode.PercentOutput,0);
 			mSpool1.set(ControlMode.PercentOutput,0);
 
-			while (ElevatorDistance > elevatorMiddlePosition)
+			if ((ElevatorDistance > elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
 			{
 				setElevatorSpeed(-.25);
 			}
+
 			mSpool.set(ControlMode.PercentOutput,0);
 			mSpool1.set(ControlMode.PercentOutput,0);
 		} 
 
 		if (position == "LOW")
 		{
-			while (ElevatorDistance > elevatorLowPosition)
+			if ((ElevatorDistance > elevatorLowPosition) && (mElevatorBottomProxHardware.get() == false))
 			{
 				setElevatorSpeed(-.25);
 			}
+
 			mSpool.set(ControlMode.PercentOutput,0);
 			mSpool1.set(ControlMode.PercentOutput,0);
 		}
@@ -113,7 +123,7 @@ public class Elevator extends Subsystem {
 	public void stop()
 	{
 		setElevatorSpeed(0);
-		System.out.println("Stopping Elevator");
+		//System.out.println("Stopping Elevator");
 
     }
     
@@ -124,19 +134,19 @@ public class Elevator extends Subsystem {
 		double ElevatorDistance = mElevatorLaser.getDistance();
 
 		//Limits
-        if (mElevatorBottomProxHardware.get() == true)
-        {
-			mSpool.set(ControlMode.PercentOutput,0);
-			mSpool1.set(ControlMode.PercentOutput,0);
-		} 
+        // if (mElevatorBottomProxHardware.get() == true)
+        // {
+		// 	mSpool.set(ControlMode.PercentOutput,0);
+		// 	mSpool1.set(ControlMode.PercentOutput,0);
+		// } 
 		
-		if (mElevatorTopProxHardware.get() == true)
-		{
-			mSpool.set(ControlMode.PercentOutput,0);
-			mSpool1.set(ControlMode.PercentOutput,0);
-		}
+		// if (mElevatorTopProxHardware.get() == false)
+		// {
+		// 	mSpool.set(ControlMode.PercentOutput,0);
+		// 	mSpool1.set(ControlMode.PercentOutput,0);
+		// }
 
-		System.out.println("Elevator Laser Distance" + ElevatorDistance);
+		//System.out.println("Elevator Laser Distance" + ElevatorDistance);
 		//Update Laser
 	
 		outputToSmartDashboard();

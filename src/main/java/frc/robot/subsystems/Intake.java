@@ -25,8 +25,8 @@ public class Intake extends Subsystem
 	private VictorSPX mMrHuck;
 	private VictorSPX mMrHuckJr;
 
-	private DigitalInput mIntakeCargoLimit;
-	private DigitalInput mIntakeHatchLimit;
+	public DigitalInput mIntakeCargoLimit;
+	public DigitalInput mIntakeHatchLimit;
 	
 public Intake() {
 
@@ -46,7 +46,7 @@ public Intake() {
 		mIntakeHatchLimit = new DigitalInput(Setup.kIntakeHatchLimit);
 
 
-		System.out.println("Intake Done Initializing.");
+		//System.out.println("Intake Done Initializing.");
     }
 //-------------------------------------------------------------------------------Intake Cargo----------------------------------------------------------------------------------//
 
@@ -108,62 +108,61 @@ public Intake() {
 //-------------------------------------------------------------------------------Rotary Intake Control ----------------------------------------------------------------------------------//
 
 public enum IntakeRotaryState {
-	CARGO,
-	HATCH;
+	CARGOStart,
+	CARGOStop,
+	HATCHStart,
+	HATCHStop;
 }
 
- private IntakeRotaryState mIntakeRotaryState=IntakeRotaryState.HATCH;
+ private IntakeRotaryState mIntakeRotaryState=IntakeRotaryState.HATCHStart;
 
  public IntakeRotaryState getIntakeRotaryState() {
 	return mIntakeRotaryState;
 }
 
  public void SetIntakeRotaryCargoState(){
-	mIntakeRotaryState = IntakeRotaryState.CARGO;
+	 if (!(mIntakeRotaryState==IntakeRotaryState.CARGOStart || mIntakeRotaryState==IntakeRotaryState.CARGOStop)){
+		mIntakeRotaryState = IntakeRotaryState.CARGOStart;
+	 }
 }
 
 public void SetIntakeRotaryHatchState(){
-	mIntakeRotaryState = IntakeRotaryState.HATCH;
+	if (!(mIntakeRotaryState==IntakeRotaryState.HATCHStart || mIntakeRotaryState==IntakeRotaryState.HATCHStop)){
+		mIntakeRotaryState = IntakeRotaryState.HATCHStart;
+		System.out.println("Go To Hatch");
+	}
 }
 
 public void SetIntakeRotaryCargo(){
-
-	//Checks if it is right state
-	if ((mIntakeCargoLimit.get() == false) && (mIntakeHatchLimit.get() == true))
-	{
-		//Move To Cargo Limit
-		while (mIntakeCargoLimit.get() == false)
-		{
-			mIntakeRotary.set(ControlMode.PercentOutput, -.25);
-		}
-
-		//Brake
-		mIntakeRotary.set(ControlMode.PercentOutput, 0);
-	}
-	else
-	{
-		System.out.println("ROTARY INTAKE SENSOR NOT LINED UP");
-	}
 	
+		//Move To Cargo Limit
+		if (mIntakeCargoLimit.get() == true)
+		{
+			mIntakeRotary.set(ControlMode.PercentOutput, .25);
+		}
+		else
+		{
+		//Brake
+		mIntakeRotaryState=IntakeRotaryState.CARGOStop;
+		mIntakeRotary.set(ControlMode.PercentOutput, 0);
+		}
+			
 }
 
 public void SetIntakeRotaryHatch(){
 
 	//Checks if it is right state
-	if ((mIntakeCargoLimit.get() == true) && (mIntakeHatchLimit.get() == false))
-	{
-		//Move To Cargo Limit
-		while (mIntakeCargoLimit.get() == false)
-		{
-			mIntakeRotary.set(ControlMode.PercentOutput, .25);
-		}
-
-		//Brake
-		mIntakeRotary.set(ControlMode.PercentOutput, 0);
+	if (mIntakeHatchLimit.get() == true)
+	{	
+		mIntakeRotary.set(ControlMode.PercentOutput, -.25);
+		System.out.println("Going to Hatch");
 	}
 	else
 	{
-		System.out.println("ROTARY INTAKE SENSOR NOT LINED UP");
+		//Brake
+		mIntakeRotaryState=IntakeRotaryState.HATCHStop;
+		System.out.println("At Hatch");
+		mIntakeRotary.set(ControlMode.PercentOutput, 0);
 	}
 
 }
@@ -193,7 +192,7 @@ public void SetIntakeRotaryHatch(){
 		switch(mIntakeHatchState) {
 
 			case SUCK:
-				setIntakeHatchSpeed(.4);
+				setIntakeHatchSpeed(1.0);
 				break;
 			case STOP:
 				setIntakeHatchSpeed(0);
@@ -205,14 +204,14 @@ public void SetIntakeRotaryHatch(){
 
 			switch(mIntakeRotaryState) {
 
-			case CARGO:
-				SetIntakeRotaryCargoState();
+			case CARGOStart:
+				SetIntakeRotaryCargo();
 				break;
-			case HATCH:
-				SetIntakeRotaryHatchState();
+			case HATCHStart:
+				SetIntakeRotaryHatch();
 				break;
 			default:
-				mIntakeRotaryState = IntakeRotaryState.HATCH;
+			mIntakeRotary.set(ControlMode.PercentOutput, 0);
 				break;
 			}
 
@@ -228,8 +227,8 @@ public void SetIntakeRotaryHatch(){
 
 	@Override
 	public void stop(){
-		mIntakeRotaryState = IntakeRotaryState.HATCH;
-		System.out.println("Stopping Intake");
+		mIntakeRotaryState = IntakeRotaryState.HATCHStop;
+		//System.out.println("Stopping Intake");
 	}
 
 }
