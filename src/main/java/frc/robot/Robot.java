@@ -100,8 +100,17 @@ public void perodic()
 		}
 		if(mSetup.getDriverLowGearButton()) {
 			mDrivetrain.lowGear();
-		}
-		mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY(), mSetup.getDriverRightY());
+    }
+    
+    if (mSetup.getDriverSlowSpeed())
+    {
+      mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY()*.5, mSetup.getDriverRightY()*.5);  
+    }
+    else
+    {
+      mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY(), mSetup.getDriverRightY());
+    }
+		
 
     //Cargo Intake
 		if(mSetup.getSecondaryCargoIntakeButton()) {

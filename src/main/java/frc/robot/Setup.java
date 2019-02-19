@@ -64,6 +64,10 @@ this.ControlBoard();
     public int getDriverPov(){
     	return mDriverStick.getPOV(0);
     }
+
+    public boolean getDriverSlowSpeed(){
+    	return mDriverStick.getRawAxis(3) > .2;
+    }
     
     //Driver Gear Controls
     public boolean getDriverHighGearButton(){

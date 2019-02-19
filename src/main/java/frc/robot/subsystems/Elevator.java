@@ -21,8 +21,8 @@ public class Elevator extends Subsystem {
 
     //Elevator Positions
     double elevatorHighPosition = 0;
-	double elevatorMiddlePosition = 0;
-	double elevatorLowPosition = 0;
+	double elevatorMiddlePosition = 60;
+	double elevatorLowPosition = -5;
 	
 	TalonSRX mSpool = new TalonSRX(Setup.kSpoolId);
 	VictorSPX mSpool1 = new VictorSPX(Setup.kSpoolId1);
@@ -82,39 +82,56 @@ public class Elevator extends Subsystem {
 		{
 			if ((ElevatorDistance < elevatorHighPosition) && (mElevatorTopProxHardware.get() == true))
 			{
-				setElevatorSpeed(.25);
+				setElevatorSpeed(-.25);
 			}
+			else
+			{
 			mSpool.set(ControlMode.PercentOutput,0);
 			mSpool1.set(ControlMode.PercentOutput,0);
+			}
+			
 		} 
 
 		if (position == "MIDDLE")
 		{
 			if ((ElevatorDistance < elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
 			{
-				setElevatorSpeed(.25);
+				setElevatorSpeed(-.25);
 			}
-			mSpool.set(ControlMode.PercentOutput,0);
-			mSpool1.set(ControlMode.PercentOutput,0);
+			else
+			{
+				mSpool.set(ControlMode.PercentOutput,0);
+				mSpool1.set(ControlMode.PercentOutput,0);
+			}
+			
 
 			if ((ElevatorDistance > elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
 			{
-				setElevatorSpeed(-.25);
+				setElevatorSpeed(.25);
 			}
 
-			mSpool.set(ControlMode.PercentOutput,0);
-			mSpool1.set(ControlMode.PercentOutput,0);
+			else
+			{
+				mSpool.set(ControlMode.PercentOutput,0);
+				mSpool1.set(ControlMode.PercentOutput,0);
+			}
+
+			
 		} 
 
 		if (position == "LOW")
 		{
 			if ((ElevatorDistance > elevatorLowPosition) && (mElevatorBottomProxHardware.get() == false))
 			{
-				setElevatorSpeed(-.25);
+				setElevatorSpeed(.25);
 			}
 
+			else
+			{
 			mSpool.set(ControlMode.PercentOutput,0);
 			mSpool1.set(ControlMode.PercentOutput,0);
+			}
+
 		}
 		} 
 
@@ -146,7 +163,7 @@ public class Elevator extends Subsystem {
 		// 	mSpool1.set(ControlMode.PercentOutput,0);
 		// }
 
-		//System.out.println("Elevator Laser Distance" + ElevatorDistance);
+		System.out.println("Elevator Laser Distance" + ElevatorDistance);
 		//Update Laser
 	
 		outputToSmartDashboard();
