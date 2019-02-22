@@ -20,9 +20,14 @@ public class Elevator extends Subsystem {
 	Setup mSetup = new Setup();
 
     //Elevator Positions
-    double elevatorHighPosition = 0;
-	double elevatorMiddlePosition = 60;
-	double elevatorLowPosition = -5;
+    double elevatorHatchHighPosition = 0;
+	double elevatorHatchMiddlePosition = 60;
+	double elevatorHatchLowPosition = -5;
+
+	double elevatorCargoHighPosition = 0;
+	double elevatorCargoMiddlePosition = 60;
+	double elevatorCargoLowPosition = -5;
+
 	
 	TalonSRX mSpool = new TalonSRX(Setup.kSpoolId);
 	VictorSPX mSpool1 = new VictorSPX(Setup.kSpoolId1);
@@ -39,7 +44,7 @@ public class Elevator extends Subsystem {
         return mInstance;
     }
 
-    public void setElevatorSpeed(double speed)
+    public void setElevatorSpeedAnalog(double speed)
 
 	 {
 		 if((mElevatorBottomProxHardware.get() == false) && (mElevatorTopProxHardware.get() == true))
@@ -72,68 +77,168 @@ public class Elevator extends Subsystem {
 			mSpool1.set(ControlMode.PercentOutput,0);
 		 }
      	
-     }
+	 }
+	
+	 public void setElevatorSpeed(double speed)
 
-    public void setElevatorPosition(String position)
-	{
-		double ElevatorDistance = mElevatorLaser.getDistance();
-			
-		if (position == "HIGH")
-		{
-			if ((ElevatorDistance < elevatorHighPosition) && (mElevatorTopProxHardware.get() == true))
+	 {
+
+		 if((mElevatorBottomProxHardware.get() == false) && (mElevatorTopProxHardware.get() == true))
+		 {
+			//System.out.println("Elevator Speed" + speed);
+			if((mElevatorLaser.getDistance()<=40) && (speed < 0 ))
 			{
-				setElevatorSpeed(-.25);
+				mSpool.set(ControlMode.PercentOutput,speed*.25);
+				mSpool1.set(ControlMode.PercentOutput,speed*.25);
 			}
 			else
 			{
+				mSpool.set(ControlMode.PercentOutput,speed);
+				mSpool1.set(ControlMode.PercentOutput,speed);
+			}
+		 }
+		 else if((mElevatorBottomProxHardware.get() == true) && (speed > 0))
+		 {
+			mSpool.set(ControlMode.PercentOutput,speed);
+			mSpool1.set(ControlMode.PercentOutput,speed);
+		 }
+		 else if((mElevatorTopProxHardware.get() == false) && (speed < 0))
+		 {
+			mSpool.set(ControlMode.PercentOutput,speed);
+			mSpool1.set(ControlMode.PercentOutput,speed);
+		 }
+		 else 
+		 {
 			mSpool.set(ControlMode.PercentOutput,0);
 			mSpool1.set(ControlMode.PercentOutput,0);
-			}
-			
-		} 
+		 }
+     	
+	 }
+	 
+	
 
-		if (position == "MIDDLE")
+	 public double ElevatorDistanceCalulator(String type, String postition)
+	 {
+		if (postition == "HIGH")
 		{
-			if ((ElevatorDistance < elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
+			if (type == "HATCH")
 			{
-				setElevatorSpeed(-.25);
+				return elevatorHatchHighPosition;
 			}
-			else
+			if (type == "CARGO")
 			{
-				mSpool.set(ControlMode.PercentOutput,0);
-				mSpool1.set(ControlMode.PercentOutput,0);
-			}
-			
-
-			if ((ElevatorDistance > elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
-			{
-				setElevatorSpeed(.25);
-			}
-
-			else
-			{
-				mSpool.set(ControlMode.PercentOutput,0);
-				mSpool1.set(ControlMode.PercentOutput,0);
-			}
-
-			
-		} 
-
-		if (position == "LOW")
-		{
-			if ((ElevatorDistance > elevatorLowPosition) && (mElevatorBottomProxHardware.get() == false))
-			{
-				setElevatorSpeed(.25);
-			}
-
-			else
-			{
-			mSpool.set(ControlMode.PercentOutput,0);
-			mSpool1.set(ControlMode.PercentOutput,0);
+				return elevatorCargoHighPosition;
 			}
 
 		}
-		} 
+		else if (postition == "MIDDLE")
+		{
+			if (type == "HATCH")
+			{
+				return elevatorHatchMiddlePosition;
+			}
+			if (type == "CARGO")
+			{
+				return elevatorCargoMiddlePosition;
+			}
+		}
+		else if (postition == "LOW")
+		{
+			if (type == "HATCH")
+			{
+				return elevatorHatchLowPosition;
+			}
+			if (type == "CARGO")
+			{
+				return elevatorCargoLowPosition;
+			}
+		}
+		
+		return 0;
+		
+	 }
+
+    public void setElevatorPosition(String type, String position)
+	{
+		double ElevatorDistance = mElevatorLaser.getDistance();
+		String mType = type;
+		String mPosition = position;
+		double ElevatorDistanceToTravel = ElevatorDistanceCalulator(mType, mPosition);
+		double ElevatorDistanceToTravelLow = ElevatorDistanceToTravel - 5;
+		double ElevatorDistanceToTravelHigh = ElevatorDistanceToTravel + 5;  
+
+		if (ElevatorDistance < ElevatorDistanceToTravel)
+		{
+
+		}
+
+		if (ElevatorDistance > ElevatorDistanceToTravel)
+		{
+			
+		}
+		if ((ElevatorDistance <= ElevatorDistanceToTravelHigh) && (ElevatorDistance >= ElevatorDistanceToTravelLow))
+		{
+			setElevatorSpeed(0);
+		}
+
+
+		//Old Verison
+				// if (position == "HIGH")
+				// {
+				// 	if ((ElevatorDistance < elevatorHighPosition) && (mElevatorTopProxHardware.get() == true))
+				// 	{
+				// 		setElevatorSpeed(-.25);
+				// 	}
+				// 	else
+				// 	{
+				// 	mSpool.set(ControlMode.PercentOutput,0);
+				// 	mSpool1.set(ControlMode.PercentOutput,0);
+				// 	}
+					
+				// } 
+
+				// if (position == "MIDDLE")
+				// {
+				// 	if ((ElevatorDistance < elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
+				// 	{
+				// 		setElevatorSpeed(-.25);
+				// 	}
+				// 	else
+				// 	{
+				// 		mSpool.set(ControlMode.PercentOutput,0);
+				// 		mSpool1.set(ControlMode.PercentOutput,0);
+				// 	}
+					
+
+				// 	if ((ElevatorDistance > elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
+				// 	{
+				// 		setElevatorSpeed(.25);
+				// 	}
+
+				// 	else
+				// 	{
+				// 		mSpool.set(ControlMode.PercentOutput,0);
+				// 		mSpool1.set(ControlMode.PercentOutput,0);
+				// 	}
+
+					
+				// } 
+
+				// if (position == "LOW")
+				// {
+				// 	if ((ElevatorDistance > elevatorLowPosition) && (mElevatorBottomProxHardware.get() == false))
+				// 	{
+				// 		setElevatorSpeed(.25);
+				// 	}
+
+				// 	else
+				// 	{
+				// 	mSpool.set(ControlMode.PercentOutput,0);
+				// 	mSpool1.set(ControlMode.PercentOutput,0);
+				// 	}
+				// }
+
+				} 
 
 
     @Override
