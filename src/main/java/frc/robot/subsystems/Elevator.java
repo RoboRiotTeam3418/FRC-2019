@@ -166,20 +166,33 @@ public class Elevator extends Subsystem {
 		double ElevatorDistanceToTravel = ElevatorDistanceCalulator(mType, mPosition);
 		double ElevatorDistanceToTravelLow = ElevatorDistanceToTravel - 5;
 		double ElevatorDistanceToTravelHigh = ElevatorDistanceToTravel + 5;  
+		boolean FinishedMoving = false;
 
-		if (ElevatorDistance < ElevatorDistanceToTravel)
-		{
 
-		}
-
-		if (ElevatorDistance > ElevatorDistanceToTravel)
-		{
-			
-		}
 		if ((ElevatorDistance <= ElevatorDistanceToTravelHigh) && (ElevatorDistance >= ElevatorDistanceToTravelLow))
 		{
 			setElevatorSpeed(0);
+			FinishedMoving = true;
+
+
 		}
+		else if (ElevatorDistance < ElevatorDistanceToTravel)
+		{
+			//<Move Up
+			setElevatorSpeed(.25);
+		}
+
+		else if (ElevatorDistance > ElevatorDistanceToTravel)
+		{
+			//Move Down
+			setElevatorSpeed(-.25);
+		}
+		else
+		{
+			setElevatorSpeed(0);
+			FinishedMoving = true;
+		}
+		
 
 
 		//Old Verison

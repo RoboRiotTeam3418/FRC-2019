@@ -85,14 +85,16 @@ public class Robot extends IterativeRobot  {
 
 public void perodic()
 {
-    //System.out.println("Tele Periodic");
-    //Controls
+    
+    //Debug Sensors
 
     // System.out.println("Bottom" + mElevator.mElevatorBottomProxHardware.get());
     // System.out.println("Top" + mElevator.mElevatorTopProxHardware.get());
 
     //System.out.println("Intake Rotary Hatch Limit " + mIntake.mIntakeHatchLimit.get());
     //System.out.println("Intake Rotary Cargo Limit " + mIntake.mIntakeCargoLimit.get());
+
+    //Controls
 
     //Drive train 
 		if(mSetup.getDriverHighGearButton()) {
@@ -132,10 +134,7 @@ public void perodic()
     { 
 			mIntake.stopSucking();
 		}
-		// else {
-		// 	mIntake.stopSucking();
-		// }
-    
+	
     //Intake Rotary
     if(mSetup.getSecondaryIntakeRotaryCargoButton()) {
       mIntake.SetIntakeRotaryCargoState();
@@ -145,23 +144,20 @@ public void perodic()
       mIntake.SetIntakeRotaryHatchState();
      } 
 
-     
-
 		//Elevator Analog
-		mElevator.setElevatorSpeed(mSetup.getSecondaryElevatorAnalog());
-
+		mElevator.setElevatorSpeedAnalog(mSetup.getSecondaryElevatorAnalog());
 
     //Elevator Positions
     if(mSetup.getSecondaryElevatorHighButton()) {
-      mElevator.setElevatorPosition("HIGH");
+      mElevator.setElevatorPosition("HATCH", "HIGH");
      } 
 
     if(mSetup.getSecondaryElevatorMiddleButton()) {
-      mElevator.setElevatorPosition("MIDDLE");
+      mElevator.setElevatorPosition("HATCH","MIDDLE");
      } 
 
     if(mSetup.getSecondaryElevatorLowButton()) {
-      mElevator.setElevatorPosition("LOW");
+      mElevator.setElevatorPosition("HATCH","LOW");
      } 
 
 
@@ -196,28 +192,26 @@ public void perodic()
 
     updateAllSubsystems();
 
-
 }
 
 
 
   @Override
   public void robotInit() {
-
-    //SmartDashboard.putStringArray("Front Camera" + mjpeg:http://10.34.18.85:1183/?action=stream); 
+ 
     mSetup = Setup.getInstance();
     mDrivetrain = Drivetrain.getInstance();
     mIntake = Intake.getInstance();
     mLED = LED.getInstance();
     mElevator = Elevator.getInstance();
-    //System.out.println("Robot Init");
+    System.out.println("Robot Init");
     stopAllSubsystems();
   
   }
 
   @Override
 	public void autonomousInit() {
-    //System.out.println("Auto Init");
+    System.out.println("Auto Init");
 		stopAllSubsystems();
 		updateAllSubsystems();
 		
@@ -232,16 +226,16 @@ public void perodic()
   
   @Override
 	public void disabledInit(){
-    //System.out.println("Disabled Init");
+      System.out.println("Disabled Init");
       mDrivetrain.highGear();
-  
 		  stopAllSubsystems();
 		  updateAllSubsystems();
   }
   
   @Override
 	public void disabledPeriodic() {
-//System.out.println("Disabled Periodic");
+
+  System.out.println("Disabled Periodic");
 
 	 //LED Lights
    if(mSetup.GetLEDClearButton()){
@@ -271,14 +265,13 @@ public void perodic()
   if(mSetup.GetLEDNoButton()){
     mLED.Clear();
   }
-
   }
 
   @Override
 	public void teleopInit(){
-	 //System.out.println("Tele Init");
 		stopAllSubsystems();
-		mDrivetrain.lowGear();
+    mDrivetrain.lowGear();
+    System.out.println("Tele Init");
     updateAllSubsystems();
     
   }
@@ -289,7 +282,4 @@ public void perodic()
     perodic();
   }
  
-
-
-
 }
