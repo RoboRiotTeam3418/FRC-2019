@@ -9,19 +9,17 @@ public class SetElevatorPositionAction implements Action
     String mType;
     String mPosition;
 
-
-
     public void DeliverAction (String type,String position)
     {
         mType = type;
         mPosition = position;
         private boolean finished = false;
 
-
     @Override
     public void start()
     {
        mElevator.setElevatorPosition(mType, mPosition);
+       finished = true;
     }
     
     public void update()
