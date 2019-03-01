@@ -11,9 +11,6 @@ public class TestMode extends AutoModeBase {
 	@Override
 	protected void routine() throws AutoModeEndedException {
 
-
-		runAction(new SetElevatorPositionAction("CARGO","HIGH"));
-		
 		/*
 
 		runAction(new CameraAlign());

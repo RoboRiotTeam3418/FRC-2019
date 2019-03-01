@@ -2,6 +2,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -105,6 +107,11 @@ this.ControlBoard();
     	return mSecondaryDriverStick.getRawButton(6);
     }
 
+    public boolean getVaccuumReleaseButton()
+    {
+      return mSecondaryDriverStick.getPOV() == 90;
+      
+    }
     //Intake Rotary
     public boolean getSecondaryIntakeRotaryCargoButton(){
     	return  mSecondaryDriverStick.getPOV()>90 && mSecondaryDriverStick.getPOV()<270;
@@ -192,7 +199,7 @@ public Solenoid mLeftShifterHardware;
 public Solenoid mRightShifterHardware;
 
 //Sensos
-//public ADXRS450_Gyro mGyro;	
+public ADXRS450_Gyro mGyro;	
 public DigitalInput mElevatorTopProxHardware;
 public DigitalInput mElevatorBottomProxHardware;
 
@@ -213,8 +220,8 @@ void HardwareMap() {
         mCompressorHardware = new Compressor(0);
 
         //Sensors
-        //mGyro = new ADXRS450_Gyro();
-        //mGyro.calibrate();
+        mGyro = new ADXRS450_Gyro();
+        mGyro.calibrate();
 
     }
     catch(Exception e)

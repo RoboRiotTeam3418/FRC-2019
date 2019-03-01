@@ -9,53 +9,31 @@ import edu.wpi.first.wpilibj.Timer;
 public class DriveStraightActionTime implements Action {
 
 	
-
 	private Drivetrain mDrivetrain = Drivetrain.getInstance();
 
-	//private ADXRS450_Gyro mGyro = Setup.getInstance().mGyro;
-
-	
-
-    //private double mAngleSetpoint = mGyro.getAngle();
-
-	
+	private ADXRS450_Gyro mGyro = Setup.getInstance().mGyro;
+    private double mAngleSetpoint = mGyro.getAngle();
 
 	private double mLinearSpeed = .7;
-
 	private double mRotationalMaxSpeed = .5;
-
 	private double mRotationalMinSpeed = .03;
-
-	
-
 	private boolean mIsForward;
-
 	private double mTimeToWait;
-
 	private double mStartTime;
-
 	private double mCurrentTime;
-
 	private double mAngleCorrectionSpeed;
-
-	
 
     public DriveStraightActionTime(double time, boolean isForward) {
 
         mIsForward = isForward;
-
         mTimeToWait = time;
 
     }
 
-    
-
     public DriveStraightActionTime(double time, boolean isForward, double LinearSpeed) {
 
         mIsForward = isForward;
-
         mTimeToWait = time;
-
         mLinearSpeed = LinearSpeed;
 
     }
@@ -65,7 +43,6 @@ public class DriveStraightActionTime implements Action {
     public DriveStraightActionTime(double feetPerSecond, double distance, boolean isForward) {
 
         mIsForward = isForward;
-
         mTimeToWait = feetPerSecond / distance;
 
     }
@@ -75,9 +52,7 @@ public class DriveStraightActionTime implements Action {
     public DriveStraightActionTime(double feetPerSecond, double distance, boolean isForward, double LinearSpeed) {
 
         mIsForward = isForward;
-
         mTimeToWait = feetPerSecond / distance;
-
         mLinearSpeed = LinearSpeed;
 
     }
@@ -89,7 +64,6 @@ public class DriveStraightActionTime implements Action {
 	public void start() {
 
 		mDrivetrain.lowGear();
-
 		mStartTime = Timer.getFPGATimestamp();
 
 	}
@@ -100,7 +74,7 @@ public class DriveStraightActionTime implements Action {
 
 	public void update() {
 
-    	//calcGyroSpeed();    
+    	calcGyroSpeed();    
 
     	mCurrentTime = Timer.getFPGATimestamp();
 
@@ -148,40 +122,40 @@ public class DriveStraightActionTime implements Action {
 
 	
 
-	// private double calcGyroError() {
+	 private double calcGyroError() {
 
-	 	//return mAngleSetpoint - mGyro.getAngle();
+	 	return mAngleSetpoint - mGyro.getAngle();
 
-	// }
+	 }
 
 	
 
-	// private void calcGyroSpeed() {
+	private void calcGyroSpeed() {
 
-	// 	mAngleCorrectionSpeed = calcGyroError() * .05;
+		mAngleCorrectionSpeed = calcGyroError() * .05;
 
-	// 	if (mAngleCorrectionSpeed < mRotationalMinSpeed && mAngleCorrectionSpeed > 0 ) {
+	 	if (mAngleCorrectionSpeed < mRotationalMinSpeed && mAngleCorrectionSpeed > 0 ) {
 
-	// 		mAngleCorrectionSpeed = mRotationalMinSpeed;
+	 		mAngleCorrectionSpeed = mRotationalMinSpeed;
 
-	// 	} else if (mAngleCorrectionSpeed > -mRotationalMinSpeed && mAngleCorrectionSpeed < 0 ) {
+	 	} else if (mAngleCorrectionSpeed > -mRotationalMinSpeed && mAngleCorrectionSpeed < 0 ) {
 
-	// 		mAngleCorrectionSpeed = -mRotationalMinSpeed;
+	 		mAngleCorrectionSpeed = -mRotationalMinSpeed;
 
-	// 	}
+	 	}
 
 		
 
-	// 	if (mAngleCorrectionSpeed > mRotationalMaxSpeed ) {
+	 	if (mAngleCorrectionSpeed > mRotationalMaxSpeed ) {
 
-	// 		mAngleCorrectionSpeed = mRotationalMaxSpeed;
+	 		mAngleCorrectionSpeed = mRotationalMaxSpeed;
 
-	// 	} else if (mAngleCorrectionSpeed < -mRotationalMaxSpeed ) {
+	 	} else if (mAngleCorrectionSpeed < -mRotationalMaxSpeed ) {
 
-	// 		mAngleCorrectionSpeed = -mRotationalMaxSpeed;
+	 		mAngleCorrectionSpeed = -mRotationalMaxSpeed;
 
-	// 	}
+	 	}
 
-	// }
+	 }
 
 }

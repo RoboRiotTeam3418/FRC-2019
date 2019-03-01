@@ -8,12 +8,14 @@ public class SetElevatorPositionAction implements Action
 
     String mType;
     String mPosition;
-
-    public void DeliverAction (String type,String position)
+    private boolean finished = false;
+    
+    public SetElevatorPositionAction(String type,String position)
     {
         mType = type;
         mPosition = position;
-        private boolean finished = false;
+        finished = false;
+    }
 
     @Override
     public void start()
@@ -34,6 +36,11 @@ public class SetElevatorPositionAction implements Action
 			System.out.println("Position Set");
             return true;
         }
+        else
+        {
+            return false;
+        }
+        
     }
     
     public void done()

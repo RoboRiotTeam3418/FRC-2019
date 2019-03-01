@@ -178,42 +178,51 @@ public void SetIntakeRotaryHatch(){
 
 public void setIntakeRotarySpeed()
 {
-	if ((mIntakeRotaryState != IntakeRotaryState.CARGOStop) && (mSetup.getSecondaryIntakeRotaryAnalog() < -.2))
-	{
-		if (mIntakeCargoLimit.get()) 
-		{
-			mIntakeRotary.set(ControlMode.PercentOutput, mSetup.getSecondaryIntakeRotaryAnalog() * .5);
+    if ((mIntakeCargoLimit.get()) && (mSetup.getSecondaryIntakeRotaryAnalog() < -.2))
+    {
+        if (mIntakeCargoLimit.get()) 
+        {
+            mIntakeRotary.set(ControlMode.PercentOutput, mSetup.getSecondaryIntakeRotaryAnalog() * -.5);
 
-		}
-		else 
-		{
-			mIntakeRotary.set(ControlMode.PercentOutput, 0);
-			mIntakeRotaryState = IntakeRotaryState.CARGOStop;
+        }
+        else 
+        {
+            mIntakeRotary.set(ControlMode.PercentOutput, 0);
+            mIntakeRotaryState = IntakeRotaryState.CARGOStop;
 
-		}
+        }
 
-	}
-	else if ((mIntakeRotaryState != IntakeRotaryState.HATCHStop) && (mSetup.getSecondaryIntakeRotaryAnalog() > .2))
-	{
-		if (mIntakeHatchLimit.get()) 
-		{
-			mIntakeRotary.set(ControlMode.PercentOutput, mSetup.getSecondaryIntakeRotaryAnalog() * .5);
+    }
+    else if ((mIntakeHatchLimit.get()) && (mSetup.getSecondaryIntakeRotaryAnalog() > .2))
+    {
+        if (mIntakeHatchLimit.get()) 
+        {
+            mIntakeRotary.set(ControlMode.PercentOutput, mSetup.getSecondaryIntakeRotaryAnalog() * -.5);
 
-		}
-		else 
-		{
-			mIntakeRotary.set(ControlMode.PercentOutput, 0);
-			mIntakeRotaryState = IntakeRotaryState.HATCHStop;
+        }
+        else 
+        {
+            mIntakeRotary.set(ControlMode.PercentOutput, 0);
+            mIntakeRotaryState = IntakeRotaryState.HATCHStop;
 
-		}
-	}
+        }
+    }
 }
+
 
 //--------------------------------------------------------------------------------Important Robot Stuff ----------------------------------------------------------------------------------//
 		
 	@Override
 	public void updateSubsystem()
 	{
+
+		if(mSetup.getVaccuumReleaseButton()){
+            mstopSuckingRelay.set(Relay.Value.kForward);
+            mIntakeHatchState = IntakeHatchState.STOP;
+        }
+        else{
+            mstopSuckingRelay.set(Relay.Value.kOff);
+        }
 
 		switch(mIntakeCargoState) {
 
@@ -234,11 +243,11 @@ public void setIntakeRotarySpeed()
 		switch(mIntakeHatchState) {
 
 			case SUCK:
-				mstopSuckingRelay.set(Relay.Value.kOff);
+				//mstopSuckingRelay.set(Relay.Value.kOff);
 				setIntakeHatchSpeed(1.0);
 				break;
 			case STOP:
-				mstopSuckingRelay.set(Relay.Value.kForward);
+				//mstopSuckingRelay.set(Relay.Value.kForward);
 				setIntakeHatchSpeed(0);
 				break;
 			default:

@@ -104,15 +104,43 @@ public void perodic()
 			mDrivetrain.lowGear();
     }
     
-    if (mSetup.getDriverSlowSpeed())
-    {
-      mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY()*.5, mSetup.getDriverRightY()*.5);  
+    // if (mSetup.getDriverSlowSpeed())
+    // {
+    //   mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY()*.5, mSetup.getDriverRightY()*.5);  
+    // }
+    // else
+    // {
+    //   mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY(), mSetup.getDriverRightY());
+    // }
+    
+    /*if (mSetup.getDriverAccuracy()){
+      
+      if (mSetup.getDriverSlowSpeed()){
+        mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftX()*.25, mSetup.getDriverLeftX() * -.25);
+        mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY()*.25, mSetup.getDriverLeftY() * -.25);
+      }
+    
+      mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY()*.25, mSetup.getDriverLeftY() * .25);
+      
+    }*/
+
+    if(mSetup.getDriverPov() == 0 || mSetup.getDriverPov() == 45 || mSetup.getDriverPov() == 315){
+      mDrivetrain.setTankDriveSpeed(-.25, -.25);
+    }
+    else if(mSetup.getDriverPov() == 180 || mSetup.getDriverPov() == 225 || mSetup.getDriverPov() == 135){
+      mDrivetrain.setTankDriveSpeed(.25, .25);
+    }
+    else if(mSetup.getDriverPov() == 90 || mSetup.getDriverPov() == 45 || mSetup.getDriverPov() == 135){
+      mDrivetrain.setTankDriveSpeed(.25, -.25);
+    }
+    else if(mSetup.getDriverPov() == 270 || mSetup.getDriverPov() == 225 || mSetup.getDriverPov() == 315){
+      mDrivetrain.setTankDriveSpeed(-.25, .25);
     }
     else
     {
-      mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY(), mSetup.getDriverRightY());
+      mDrivetrain.setTankDriveSpeed(mSetup.getDriverRightY(), mSetup.getDriverLeftY());
     }
-		
+
 
     //Cargo Intake
 		if(mSetup.getSecondaryCargoIntakeButton()) {
@@ -127,6 +155,7 @@ public void perodic()
     }
     
      //Hatch Intake
+     
 		if(mSetup.getMrHuckSuckButton()) {
       mIntake.IntakeHatch();
      } 
@@ -159,6 +188,20 @@ public void perodic()
     if(mSetup.getSecondaryElevatorLowButton()) {
       mElevator.setElevatorPosition("HATCH","LOW");
      } 
+
+
+     //Elevator Auto Deliver
+    //  if(mSetup.getSecondaryElevatorHighButton()) {
+    //   mElevator.setElevatorPosition("HATCH", "HIGH");
+    //  } 
+
+    // if(mSetup.getSecondaryElevatorMiddleButton()) {
+    //   mElevator.setElevatorPosition("HATCH","MIDDLE");
+    //  } 
+
+    // if(mSetup.getSecondaryElevatorLowButton()) {
+    //   mElevator.setElevatorPosition("HATCH","LOW");
+    //  } 
 
 
      //LED Lights
