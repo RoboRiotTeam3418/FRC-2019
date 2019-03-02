@@ -144,6 +144,10 @@ this.ControlBoard();
     	return mSecondaryDriverStick.getRawButton(1);
     }
 
+    public boolean getSecondaryAutoStopButton(){
+      return mSecondaryDriverStick.getRawButton(3);
+    }
+
     //LED Controls 
 
     //Switch Board

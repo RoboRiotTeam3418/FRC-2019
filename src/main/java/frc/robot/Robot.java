@@ -40,6 +40,9 @@
 
 
 package frc.robot;
+import frc.robot.auto.modes.DeliverHatchHighPosition;
+import frc.robot.auto.modes.DeliverHatchLowPosition;
+import frc.robot.auto.modes.DeliverHatchMiddlePosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
@@ -55,6 +58,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.subsystems.LED;
+import frc.robot.auto.AutoExecuter;
 
 
 public class Robot extends IterativeRobot  {
@@ -65,6 +69,8 @@ public class Robot extends IterativeRobot  {
   Elevator mElevator;
   Intake mIntake;
   LED mLED;
+
+  AutoExecuter mAutoExecuter = null;
   
   public void updateAllSubsystems(){
 		
@@ -81,19 +87,38 @@ public class Robot extends IterativeRobot  {
 		mIntake.stop();
     mElevator.stop();
     mLED.Clear();
-	}
+  }
+  
+ public void auto(String automode)
+ {
+    if (mAutoExecuter != null) {
 
-public void perodic()
+      mAutoExecuter.stop();
+
+    }
+    mAutoExecuter = new AutoExecuter();
+
+   switch(automode) {
+
+     case "DeliverHatchHighPosition":
+      mAutoExecuter.setAutoRoutine(new DeliverHatchHighPosition());
+      mAutoExecuter.start();
+ 			break;
+     case "DeliverHatchMiddlePosition":
+      mAutoExecuter.setAutoRoutine(new DeliverHatchMiddlePosition());
+      mAutoExecuter.start();
+ 		  break;
+     case "DeliverHatchLowPosition":
+     mAutoExecuter.setAutoRoutine(new DeliverHatchLowPosition());
+     mAutoExecuter.start();
+       break;
+     default:
+ 			break;
+ 		}
+}
+public void manual()
 {
     
-    //Debug Sensors
-
-    // System.out.println("Bottom" + mElevator.mElevatorBottomProxHardware.get());
-    // System.out.println("Top" + mElevator.mElevatorTopProxHardware.get());
-
-    //System.out.println("Intake Rotary Hatch Limit " + mIntake.mIntakeHatchLimit.get());
-    //System.out.println("Intake Rotary Cargo Limit " + mIntake.mIntakeCargoLimit.get());
-
     //Controls
 
     //Drive train 
@@ -155,7 +180,6 @@ public void perodic()
     }
     
      //Hatch Intake
-     
 		if(mSetup.getMrHuckSuckButton()) {
       mIntake.IntakeHatch();
      } 
@@ -262,7 +286,7 @@ public void perodic()
 	
 	@Override
 	public void autonomousPeriodic() {
-    perodic();
+    manual();
 		updateAllSubsystems();
 	}
 
@@ -319,10 +343,23 @@ public void perodic()
     
   }
   
-
   @Override
   public void teleopPeriodic() {
-    perodic();
+    
+    if (mSetup.getSecondaryAutoStopButton())
+    {
+      mAutoExecuter.stop();
+    }
+
+    if(mSetup.getSecondaryElevatorMiddleButton())
+    {
+      auto("DeliverHatchMiddlePosition");
+    }
+    else
+    {
+      manual();
+    }
+
   }
  
 }
