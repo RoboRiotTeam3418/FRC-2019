@@ -45,7 +45,7 @@ public class IntakeHatchAction implements Action
     
     public void done()
     {
-
+        mIntake.stop();
     }
 
 }

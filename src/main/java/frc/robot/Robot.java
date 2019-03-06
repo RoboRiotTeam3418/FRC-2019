@@ -89,13 +89,21 @@ public class Robot extends IterativeRobot  {
     mLED.Clear();
   }
   
+
+
  public void auto(String automode)
  {
+
+  if (mSetup.AutoRunning == false)
+  {
+    mSetup.AutoRunning = true;
+    
     if (mAutoExecuter != null) {
 
       mAutoExecuter.stop();
 
     }
+
     mAutoExecuter = new AutoExecuter();
 
    switch(automode) {
@@ -114,7 +122,8 @@ public class Robot extends IterativeRobot  {
        break;
      default:
  			break;
- 		}
+     }
+    }
 }
 public void manual()
 {
@@ -205,9 +214,9 @@ public void manual()
       mElevator.setElevatorPosition("HATCH", "HIGH");
      } 
 
-    if(mSetup.getSecondaryElevatorMiddleButton()) {
-      mElevator.setElevatorPosition("HATCH","MIDDLE");
-     } 
+    // if(mSetup.getSecondaryElevatorMiddleButton()) {
+    //   mElevator.setElevatorPosition("HATCH","MIDDLE");
+    //  } 
 
     if(mSetup.getSecondaryElevatorLowButton()) {
       mElevator.setElevatorPosition("HATCH","LOW");

@@ -21,7 +21,7 @@ public class DeliverHatchMiddlePosition extends AutoModeBase {
 		runAction(new DriveStraightActionTime(.5, false, .25));
 		runAction(new WaitAction(1));
 		runAction(new SetElevatorPositionAction("HATCH", "LOW"));
-
+		
 	}
 
 }

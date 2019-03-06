@@ -47,7 +47,7 @@ public class OuttakeCargoAction implements Action
     
     public void done()
     {
-
+        mIntake.stop();
     }
 
 }
