@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 
@@ -32,7 +33,7 @@ public class LED extends Subsystem
     @Override
     public void outputToSmartDashboard()
     {
-
+        
     }
     @Override
     public void stop()

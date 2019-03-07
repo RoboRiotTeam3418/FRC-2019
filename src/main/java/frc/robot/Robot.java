@@ -130,7 +130,7 @@ public void manual()
     
     //Controls
 
-    //Drive train 
+    //Drive train Gears 
 		if(mSetup.getDriverHighGearButton()) {
 			mDrivetrain.highGear();
 		}
@@ -138,26 +138,7 @@ public void manual()
 			mDrivetrain.lowGear();
     }
     
-    // if (mSetup.getDriverSlowSpeed())
-    // {
-    //   mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY()*.5, mSetup.getDriverRightY()*.5);  
-    // }
-    // else
-    // {
-    //   mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY(), mSetup.getDriverRightY());
-    // }
-    
-    /*if (mSetup.getDriverAccuracy()){
-      
-      if (mSetup.getDriverSlowSpeed()){
-        mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftX()*.25, mSetup.getDriverLeftX() * -.25);
-        mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY()*.25, mSetup.getDriverLeftY() * -.25);
-      }
-    
-      mDrivetrain.setTankDriveSpeed(mSetup.getDriverLeftY()*.25, mSetup.getDriverLeftY() * .25);
-      
-    }*/
-
+    //Dpad and Tank Driver Controls
     if(mSetup.getDriverPov() == 0 || mSetup.getDriverPov() == 45 || mSetup.getDriverPov() == 315){
       mDrivetrain.setTankDriveSpeed(-.25, -.25);
     }

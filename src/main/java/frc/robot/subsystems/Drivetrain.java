@@ -19,7 +19,7 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	
-    //Shifters
+    //Shifter
     Solenoid mSolenoid;
    
     //Drive Motors

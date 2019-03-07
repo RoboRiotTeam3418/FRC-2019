@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Elevator extends Subsystem {
@@ -19,7 +20,7 @@ public class Elevator extends Subsystem {
 	LIDAR mElevatorLaser;
 	Setup mSetup = new Setup();
 
-    //Elevator Positions
+    //Elevator Positions 
     double elevatorHatchHighPosition = 0;
 	double elevatorHatchMiddlePosition = 60;
 	double elevatorHatchLowPosition = -5;
@@ -27,6 +28,8 @@ public class Elevator extends Subsystem {
 	double elevatorCargoHighPosition = 0;
 	double elevatorCargoMiddlePosition = 60;
 	double elevatorCargoLowPosition = -5;
+
+	double ElevatorSlowdownPoint = 15;
 
 	
 	TalonSRX mSpool = new TalonSRX(Setup.kSpoolId);
@@ -49,8 +52,8 @@ public class Elevator extends Subsystem {
 	 {
 		 if((mElevatorBottomProxHardware.get() == false) && (mElevatorTopProxHardware.get() == true))
 		 {
-			//System.out.println("Elevator Speed" + speed);
-			if((mElevatorLaser.getDistance()<=40) && (mSetup.getSecondaryElevatorAnalog() < 0 ))
+			
+			if((mElevatorLaser.getDistance()<=ElevatorSlowdownPoint) && (mSetup.getSecondaryElevatorAnalog() < 0 ))
 			{
 				mSpool.set(ControlMode.PercentOutput,speed*.25);
 				mSpool1.set(ControlMode.PercentOutput,speed*.25);
@@ -85,8 +88,8 @@ public class Elevator extends Subsystem {
 
 		 if((mElevatorBottomProxHardware.get() == false) && (mElevatorTopProxHardware.get() == true))
 		 {
-			//System.out.println("Elevator Speed" + speed);
-			if((mElevatorLaser.getDistance()<=40) && (speed < 0 ))
+			
+			if((mElevatorLaser.getDistance()<=ElevatorSlowdownPoint) && (speed < 0 ))
 			{
 				mSpool.set(ControlMode.PercentOutput,speed*.25);
 				mSpool1.set(ControlMode.PercentOutput,speed*.25);
@@ -115,8 +118,7 @@ public class Elevator extends Subsystem {
      	
 	 }
 	 
-	
-
+	//This will calulate the distance needed to travel making the Set Position Smaller
 	 public double ElevatorDistanceCalulator(String type, String postition)
 	 {
 		if (postition == "HIGH")
@@ -158,6 +160,9 @@ public class Elevator extends Subsystem {
 		
 	 }
 
+//This Varible is used in the Auto Actions To Stop it from moving
+public boolean FinishedMoving;
+
     public void setElevatorPosition(String type, String position)
 	{
 		double ElevatorDistance = mElevatorLaser.getDistance();
@@ -166,8 +171,7 @@ public class Elevator extends Subsystem {
 		double ElevatorDistanceToTravel = ElevatorDistanceCalulator(mType, mPosition);
 		double ElevatorDistanceToTravelLow = ElevatorDistanceToTravel - 5;
 		double ElevatorDistanceToTravelHigh = ElevatorDistanceToTravel + 5;  
-		boolean FinishedMoving = false;
-
+		
 
 		if ((ElevatorDistance <= ElevatorDistanceToTravelHigh) && (ElevatorDistance >= ElevatorDistanceToTravelLow))
 		{
@@ -192,73 +196,14 @@ public class Elevator extends Subsystem {
 			setElevatorSpeed(0);
 			FinishedMoving = true;
 		}
-		
 
-
-		//Old Verison
-				// if (position == "HIGH")
-				// {
-				// 	if ((ElevatorDistance < elevatorHighPosition) && (mElevatorTopProxHardware.get() == true))
-				// 	{
-				// 		setElevatorSpeed(-.25);
-				// 	}
-				// 	else
-				// 	{
-				// 	mSpool.set(ControlMode.PercentOutput,0);
-				// 	mSpool1.set(ControlMode.PercentOutput,0);
-				// 	}
-					
-				// } 
-
-				// if (position == "MIDDLE")
-				// {
-				// 	if ((ElevatorDistance < elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
-				// 	{
-				// 		setElevatorSpeed(-.25);
-				// 	}
-				// 	else
-				// 	{
-				// 		mSpool.set(ControlMode.PercentOutput,0);
-				// 		mSpool1.set(ControlMode.PercentOutput,0);
-				// 	}
-					
-
-				// 	if ((ElevatorDistance > elevatorMiddlePosition) && (mElevatorTopProxHardware.get() == true) && (mElevatorBottomProxHardware.get() == false))
-				// 	{
-				// 		setElevatorSpeed(.25);
-				// 	}
-
-				// 	else
-				// 	{
-				// 		mSpool.set(ControlMode.PercentOutput,0);
-				// 		mSpool1.set(ControlMode.PercentOutput,0);
-				// 	}
-
-					
-				// } 
-
-				// if (position == "LOW")
-				// {
-				// 	if ((ElevatorDistance > elevatorLowPosition) && (mElevatorBottomProxHardware.get() == false))
-				// 	{
-				// 		setElevatorSpeed(.25);
-				// 	}
-
-				// 	else
-				// 	{
-				// 	mSpool.set(ControlMode.PercentOutput,0);
-				// 	mSpool1.set(ControlMode.PercentOutput,0);
-				// 	}
-				// }
-
-				} 
-
+	}
 
     @Override
 	public void stop()
 	{
 		setElevatorSpeed(0);
-		//System.out.println("Stopping Elevator");
+		System.out.println("Stopping Elevator");
 
     }
     
@@ -266,29 +211,15 @@ public class Elevator extends Subsystem {
 	@Override
 	public void updateSubsystem(){
 		
-		double ElevatorDistance = mElevatorLaser.getDistance();
-
-		//Limits
-        // if (mElevatorBottomProxHardware.get() == true)
-        // {
-		// 	mSpool.set(ControlMode.PercentOutput,0);
-		// 	mSpool1.set(ControlMode.PercentOutput,0);
-		// } 
-		
-		// if (mElevatorTopProxHardware.get() == false)
-		// {
-		// 	mSpool.set(ControlMode.PercentOutput,0);
-		// 	mSpool1.set(ControlMode.PercentOutput,0);
-		// }
-
-		System.out.println("Elevator Laser Distance" + ElevatorDistance);
 		//Update Laser
-	
+		double ElevatorDistance = mElevatorLaser.getDistance();
+		
 		outputToSmartDashboard();
 	}
 	
 	@Override
 	public void outputToSmartDashboard() {
+		SmartDashboard.putNumber("Elevator Laser Distance", mElevatorLaser.getDistance());
 		
 	}
 

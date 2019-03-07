@@ -14,19 +14,20 @@ public class SetElevatorPositionAction implements Action
     {
         mType = type;
         mPosition = position;
-        finished = false;
     }
 
     @Override
     public void start()
     {
        mElevator.setElevatorPosition(mType, mPosition);
-       finished = true;
     }
     
     public void update()
     {
-        
+        if(mElevator.FinishedMoving)
+        {
+            finished = true;
+        }
     }
     
     public boolean isFinished()
